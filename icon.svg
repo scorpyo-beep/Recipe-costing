@@ -1,1 +1,154 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="110" fill="#07558a"/><circle cx="256" cy="256" r="125" fill="#f28c28"/><path d="M131 256h250M256 131c-52 38-52 212 0 250M256 131c52 38 52 212 0 250M154 174c58 35 146 35 204 0M154 338c58-35 146-35 204 0" fill="none" stroke="#713b18" stroke-width="16" stroke-linecap="round"/><path d="M83 120h100M83 392h100M329 120h100M329 392h100" stroke="#fff" stroke-width="18" stroke-linecap="round" opacity=".35"/></svg>
+<svg xmlns="http://w3.org" viewBox="0 0 800 800" width="100%" height="100%">
+  <!-- Definition for reusable gradients and drop shadows -->
+  <defs>
+    <!-- Background Shadow -->
+    <filter id="drop-shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="2" dy="5" stdDeviation="4" flood-opacity="0.1"/>
+    </filter>
+
+    <!-- Tomato Gradient -->
+    <radialGradient id="tomato-grad" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FF5A5A"/>
+      <stop offset="40%" stop-color="#E62222"/>
+      <stop offset="100%" stop-color="#B20A0A"/>
+    </radialGradient>
+
+    <!-- Pepper Gradient -->
+    <linearGradient id="pepper-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFD166"/>
+      <stop offset="50%" stop-color="#F4A261"/>
+      <stop offset="100%" stop-color="#E76F51"/>
+    </linearGradient>
+
+    <!-- Basil Leaf Gradient -->
+    <linearGradient id="leaf-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#99E265"/>
+      <stop offset="100%" stop-color="#439A24"/>
+    </linearGradient>
+
+    <!-- Shadow for Floating Elements -->
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="100%" height="100%" fill="#FDFDFD"/>
+
+  <!-- ========================================== -->
+  <!-- FLOATING INGREDIENTS LAYER                 -->
+  <!-- ========================================== -->
+  <g id="ingredients" filter="url(#soft-shadow)">
+    
+    <!-- Large Tomato (Left) -->
+    <g id="tomato" transform="translate(250, 270)">
+      <circle cx="0" cy="0" r="55" fill="url(#tomato-grad)"/>
+      <!-- Tomato Stem/Leaves -->
+      <path d="M-5 -52 C-15 -65 -30 -55 -25 -45 C-15 -40 -5 -45 -5 -52 Z" fill="#3A7D2C"/>
+      <path d="M5 -52 C15 -65 30 -55 25 -45 C15 -40 5 -45 5 -52 Z" fill="#439A24"/>
+      <path d="M0 -55 C0 -75 -10 -70 -5 -55 Z" fill="#2D6022" stroke="#2D6022" stroke-width="2"/>
+      <path d="M-8 -50 C-5 -68 10 -68 5 -50 C2 -45 -3 -45 -8 -50 Z" fill="#3A7D2C"/>
+      <!-- Gloss Highlight -->
+      <ellipse cx="-20" cy="-20" rx="12" ry="7" transform="rotate(-25 -20 -20)" fill="#FFFFFF" opacity="0.6"/>
+    </g>
+
+    <!-- Yellow/Orange Bell Pepper (Top Right) -->
+    <g id="bell-pepper" transform="translate(480, 190) rotate(15)">
+      <!-- Main Pepper Body Segments -->
+      <path d="M-40 -20 C-55 -20 -65 20 -55 50 C-45 75 -15 80 -5 75 C10 80 40 75 50 50 C60 20 50 -20 35 -20 C20 -20 0 -10 -5 -20 C-10 -10 -25 -20 -40 -20 Z" fill="url(#pepper-grad)"/>
+      <!-- Front Shading Lines to show depth segments -->
+      <path d="M-15 -12 C-25 10 -25 50 -5 73" fill="none" stroke="#D47A32" stroke-width="3" opacity="0.4"/>
+      <path d="M15 -12 C25 10 25 50 5 73" fill="none" stroke="#D47A32" stroke-width="3" opacity="0.4"/>
+      <!-- Stem -->
+      <path d="M-5 -20 C-3 -45 15 -40 10 -18" fill="none" stroke="#5A9E32" stroke-width="10" stroke-linecap="round"/>
+      <!-- Highlight -->
+      <path d="M-40 0 C-45 20 -35 45 -35 45" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.4"/>
+    </g>
+
+    <!-- Top Left Basil Leaf -->
+    <g id="leaf-top-left" transform="translate(280, 175) rotate(-35)">
+      <path d="M0 0 C-35 -20 -50 -60 0 -90 C50 -60 35 -20 0 0 Z" fill="url(#leaf-grad)"/>
+      <path d="M0 0 L0 -85" fill="none" stroke="#2D6022" stroke-width="2" opacity="0.5"/>
+    </g>
+
+    <!-- Center Basil Leaf -->
+    <g id="leaf-center" transform="translate(370, 245) rotate(15)">
+      <path d="M0 0 C-25 -15 -35 -45 0 -70 C35 -45 25 -15 0 0 Z" fill="url(#leaf-grad)"/>
+      <path d="M0 0 L0 -65" fill="none" stroke="#2D6022" stroke-width="2" opacity="0.5"/>
+    </g>
+
+    <!-- Bottom Left Basil Leaf -->
+    <g id="leaf-bottom-left" transform="translate(170, 400) rotate(-65)">
+      <path d="M0 0 C-25 -15 -35 -45 0 -70 C35 -45 25 -15 0 0 Z" fill="url(#leaf-grad)"/>
+      <path d="M0 0 L0 -65" fill="none" stroke="#2D6022" stroke-width="1.5" opacity="0.5"/>
+    </g>
+
+    <!-- Rosemary Sprig (Right) -->
+    <g id="rosemary" transform="translate(560, 310) rotate(25)">
+      <!-- Main Stem -->
+      <path d="M0 110 L0 -40" fill="none" stroke="#3A7D2C" stroke-width="5" stroke-linecap="round"/>
+      <!-- Needles/Leaves along the stem -->
+      <path d="M0 90 C25 80 40 60 45 40" fill="none" stroke="#439A24" stroke-width="6" stroke-linecap="round"/>
+      <path d="M0 80 C-25 70 -40 50 -45 30" fill="none" stroke="#3A7D2C" stroke-width="6" stroke-linecap="round"/>
+      <path d="M0 60 C25 50 45 30 50 10" fill="none" stroke="#439A24" stroke-width="6" stroke-linecap="round"/>
+      <path d="M0 45 C-25 35 -45 15 -50 -5" fill="none" stroke="#3A7D2C" stroke-width="6" stroke-linecap="round"/>
+      <path d="M0 20 C25 10 45 -10 45 -30" fill="none" stroke="#439A24" stroke-width="6" stroke-linecap="round"/>
+      <path d="M0 5 C-25 -5 -45 -25 -40 -45" fill="none" stroke="#3A7D2C" stroke-width="6" stroke-linecap="round"/>
+      <path d="M0 -15 C20 -30 30 -50 25 -65" fill="none" stroke="#439A24" stroke-width="6" stroke-linecap="round"/>
+      <path d="M0 -30 C-15 -45 -20 -65 -25 -75" fill="none" stroke="#3A7D2C" stroke-width="6" stroke-linecap="round"/>
+    </g>
+
+    <!-- Whole Peppercorns & Spices -->
+    <g id="peppercorns" fill="#332C26">
+      <circle cx="430" cy="110" r="14"/>
+      <circle cx="495" cy="145" r="10"/>
+      <circle cx="360" cy="130" r="12"/>
+      <circle cx="410" cy="165" r="7"/>
+      <circle cx="190" cy="305" r="9"/>
+      <circle cx="210" cy="210" r="11"/>
+      <circle cx="525" cy="295" r="13"/>
+      <circle cx="475" cy="325" r="11"/>
+      <circle cx="428" cy="340" r="8"/>
+    </g>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- MAIN APP ICON EMBLEM LAYER                 -->
+  <!-- ========================================== -->
+  <!-- Chef Hat Outline (Clean, rounded geometry) -->
+  <g id="chef-hat" stroke="#424647" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Lower Base Band -->
+    <path d="M 285 715 L 515 715" />
+    <path d="M 292 645 C 330 648 470 648 508 645" />
+    
+    <!-- Vertical Ear Base Lines -->
+    <path d="M 292 645 L 292 715" />
+    <path d="M 508 645 L 508 715" />
+
+    <!-- Left Puff Segment -->
+    <path d="M 292 645 C 240 645 200 590 200 530 C 200 460 270 435 320 455" />
+    
+    <!-- Right Puff Segment -->
+    <path d="M 508 645 C 560 645 600 590 600 530 C 600 460 530 435 480 455" />
+    
+    <!-- Top Large Center Cloud Dome -->
+    <path d="M 315 460 C 310 375 490 375 485 460" />
+
+    <!-- Interior Stylized Crease Details -->
+    <path d="M 265 550 C 275 570 290 585 315 585" stroke-width="10" opacity="0.4" />
+    <path d="M 535 550 C 525 570 510 585 485 585" stroke-width="10" opacity="0.4" />
+  </g>
+
+  <!-- Dynamic Green Dollar Sign Embedded in Center -->
+  <g id="dollar-sign">
+    <!-- Vertical Stroke Passing Through Hat Front and Center -->
+    <path d="M 400 375 L 400 755" stroke="#137A43" stroke-width="24" stroke-linecap="round" />
+    
+    <!-- S-Curve Body -->
+    <path d="M 465 470 
+             C 390 440 330 475 330 525 
+             C 330 590 470 580 470 645 
+             C 470 700 400 725 340 690" 
+          fill="none" stroke="#137A43" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+</svg>
