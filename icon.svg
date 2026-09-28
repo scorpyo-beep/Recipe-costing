@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="100%" height="100%">
+  <!-- Definitions for complex gradients and shading -->
+  <defs>
+    <!-- Background subtle radial burst -->
+    <radialGradient id="bg-glow" cx="50%" cy="60%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#F7F7F7" stop-opacity="1"/>
+    </radialGradient>
+
+    <!-- Tomato Shading Gradients -->
+    <radialGradient id="tomato-body" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#FF5252"/>
+      <stop offset="75%" stop-color="#D62828"/>
+      <stop offset="100%" stop-color="#9B111E"/>
+    </radialGradient>
+    <linearGradient id="tomato-leaf-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2D6A4F"/>
+      <stop offset="100%" stop-color="#1B4332"/>
+    </linearGradient>
+    <linearGradient id="tomato-leaf-light" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#52B788"/>
+      <stop offset="100%" stop-color="#2D6A4F"/>
+    </linearGradient>
+
+    <!-- Yellow Pepper Gradients -->
+    <linearGradient id="pepper-body" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#F9C74F"/>
+      <stop offset="60%" stop-color="#E99F15"/>
+      <stop offset="100%" stop-color="#A76D03"/>
+    </linearGradient>
+
+    <!-- Basil Leaves Gradients -->
+    <linearGradient id="basil-light" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#74C69D"/>
+      <stop offset="100%" stop-color="#40916C"/>
+    </linearGradient>
+    <linearGradient id="basil-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#40916C"/>
+      <stop offset="100%" stop-color="#1B4332"/>
+    </linearGradient>
+
+    <!-- Rosemary Gradient -->
+    <linearGradient id="rosemary-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2D6A4F"/>
+      <stop offset="100%" stop-color="#52B788"/>
+    </linearGradient>
+
+    <!-- Drop Shadows for Floating Elements -->
+    <filter id="soft-shadow" x="-10%" y="-10%" width="125%" height="125%">
+      <feDropShadow dx="3" dy="12" stdDeviation="8" flood-color="#1A202C" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Background Base Canvas -->
+  <rect width="1000" height="1000" fill="url(#bg-glow)"/>
+
+  <!-- ========================================================= -->
+  <!-- LAYER 1: FLOATING INGREDIENTS WITH RICH GRADIENTS & DETAILS -->
+  <!-- ========================================================= -->
+  <g id="floating-ingredients" filter="url(#soft-shadow)">
+    
+    <!-- LEFT SIDE: TOMATO AND BASIL -->
+    <!-- Tomato Unit -->
+    <g id="tomato-group" transform="translate(305, 328)">
+      <!-- Main Core Round Shadow/Base -->
+      <circle cx="0" cy="0" r="76" fill="url(#tomato-body)"/>
+      
+      <!-- Crown Stem / Leaves (Star Pattern) -->
+      <path d="M-5 -68 Q-12 -40 0 -12 Q-25 -35 -48 -52 Q-25 -25 -32 5 Q-15 -15 0 -10 Q15 -15 32 5 Q25 -25 48 -52 Q25 -35 0 -12 Q12 -40 5 -68 Z" fill="url(#tomato-leaf-dark)"/>
+      <path d="M-3 -65 Q-8 -40 0 -12 Q-18 -30 -38 -45 Q-18 -20 -24 3 Q-10 -12 0 -10 Q10 -12 24 3 Q18 -20 38 -45 Q18 -30 0 -12 Q8 -40 3 -65 Z" fill="url(#tomato-leaf-light)"/>
+      <!-- Main Central Stem Core -->
+      <path d="M0 -12 Q8 -32 15 -42 Q10 -45 2 -32 Q-2 -22 0 -12" fill="#1B4332"/>
+      
+      <!-- Photorealistic Gloss Highlights -->
+      <ellipse cx="32" cy="-22" rx="16" ry="10" transform="rotate(-30 32 -22)" fill="#FFFFFF" opacity="0.6"/>
+      <ellipse cx="-35" cy="25" rx="8" ry="4" transform="rotate(45 -35 25)" fill="#FFFFFF" opacity="0.25"/>
+    </g>
+
+    <!-- Lower Left Isolated Basil Leaf -->
+    <g id="basil-bottom-left" transform="translate(195, 412) rotate(-45)">
+      <path d="M0 0 C-40 -15 -50 -55 0 -85 C50 -55 40 -15 0 0 Z" fill="url(#basil-light)"/>
+      <path d="M0 0 C-20 -15 -25 -45 0 -85 C25 -45 20 -15 0 0 Z" fill="url(#basil-dark)" opacity="0.3"/>
+      <path d="M0 0 L0 -80" stroke="#1B4332" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4"/>
+    </g>
+
+    <!-- Upper Left Large Basil Leaf -->
+    <g id="basil-top-left" transform="translate(340, 185) rotate(-20)">
+      <path d="M0 0 C-50 -20 -65 -75 0 -110 C65 -75 50 -20 0 0 Z" fill="url(#basil-light)"/>
+      <path d="M0 0 C-25 -20 -32 -60 0 -110 C32 -60 25 -20 0 0 Z" fill="url(#basil-dark)" opacity="0.25"/>
+      <path d="M0 0 L0 -105" stroke="#1B4332" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+    </g>
+
+    <!-- CENTER & UPPER ELEMENTS -->
+    <!-- Middle Center Small Basil Leaf -->
+    <g id="basil-center" transform="translate(455, 275) rotate(25)">
+      <path d="M0 0 C-30 -12 -40 -45 0 -70 C40 -45 30 -12 0 0 Z" fill="url(#basil-light)"/>
+      <path d="M0 0 L0 -65" stroke="#1B4332" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+    </g>
+
+    <!-- Top Right Yellow/Orange Bell Pepper -->
+    <g id="bell-pepper-group" transform="translate(605, 202) rotate(20)">
+      <!-- Thick Stem -->
+      <path d="M-8 -38 C-5 -65 18 -60 12 -32" fill="none" stroke="#40916C" stroke-width="14" stroke-linecap="round"/>
+      <!-- Main Organic Segmented Body -->
+      <path d="M-55 -32 C-78 -32 -92 20 -78 62 C-65 98 -22 108 -5 100 C12 108 55 98 68 62 C82 20 68 -32 45 -32 C25 -32 0 -18 -5 -32 C-10 -18 -32 -32 -55 -32 Z" fill="url(#pepper-body)"/>
+      <!-- Inner Crease Shading Paths -->
+      <path d="M-22 -20 C-38 10 -38 65 -10 94" fill="none" stroke="#8F5401" stroke-width="4" opacity="0.25"/>
+      <path d="M18 -20 C32 10 32 65 5 94" fill="none" stroke="#8F5401" stroke-width="4" opacity="0.25"/>
+      <!-- High Contrast Surface Reflections -->
+      <path d="M-55 0 C-62 30 -50 65 -50 65" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.45"/>
+    </g>
+
+    <!-- RIGHT SIDE: ROSEMARY SPRIG -->
+    <g id="rosemary-sprig" transform="translate(712, 318) rotate(35)">
+      <!-- Main Core Wood Stem -->
+      <path d="M0 140 L0 -60" fill="none" stroke="#1B4332" stroke-width="7" stroke-linecap="round"/>
+      <!-- Clustered Needle Path Arrays -->
+      <path d="M0 110 Q40 95 55 55" fill="none" stroke="url(#rosemary-grad)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M0 95 Q-40 80 -55 40" fill="none" stroke="#2D6A4F" stroke-width="8" stroke-linecap="round"/>
+      <path d="M0 70 Q45 55 60 15" fill="none" stroke="url(#rosemary-grad)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M0 50 Q-45 35 -60 -5" fill="none" stroke="#2D6A4F" stroke-width="8" stroke-linecap="round"/>
+      <path d="M0 20 Q50 0 55 -40" fill="none" stroke="url(#rosemary-grad)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M0 -5 Q-50 -25 -45 -65" fill="none" stroke="#2D6A4F" stroke-width="8" stroke-linecap="round"/>
+      <path d="M0 -30 Q35 -55 25 -85" fill="none" stroke="url(#rosemary-grad)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M0 -50 Q-25 -75 -35 -95" fill="none" stroke="#1B4332" stroke-width="7" stroke-linecap="round"/>
+    </g>
+
+    <!-- SCATTERED SPICES & PEPPERCORNS -->
+    <g id="peppercorn-spices" fill="#221C18">
+      <!-- Dark Whole Peppercorns -->
+      <circle cx="492" cy="122" r="18"/>
+      <circle cx="565" cy="162" r="13"/>
+      <circle cx="428" cy="148" r="15"/>
+      <circle cx="440" cy="202" r="9"/>
+      <circle cx="185" cy="358" r="12"/>
+      <circle cx="232" cy="245" r="14"/>
+      <circle cx="568" cy="372" r="16"/>
+      <circle cx="500" cy="385" r="12"/>
+      <!-- Small Spice Particles / Speckles -->
+      <circle cx="442" cy="248" r="5" fill="#A76D03"/>
+      <circle cx="498" cy="305" r="6" fill="#A76D03"/>
+      <circle cx="612" cy="298" r="5" fill="#40916C"/>
+    </g>
+  </g>
+
+  <!-- ========================================================= -->
+  <!-- LAYER 2: PRIMARY CHEF HAT OUTLINE ICON ARCHITECTURE      -->
+  <!-- ========================================================= -->
+  <!-- Styled in clean, thick, dark charcoal structural strokes -->
+  <g id="chef-hat-structure" stroke="#404446" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Straight Lower Base Rim -->
+    <path d="M 315 885 L 685 885" />
+    <!-- Curved Inner Head Band Base -->
+    <path d="M 322 795 C 370 800 630 800 678 795" />
+    
+    <!-- Left & Right Vertical Band Closures -->
+    <path d="M 322 795 L 322 885" />
+    <path d="M 678 795 L 678 885" />
+
+    <!-- Left Outer Crown Bulb Cloud -->
+    <path d="M 322 795 C 235 795 175 720 175 635 C 175 538 270 500 340 528" />
+    
+    <!-- Right Outer Crown Bulb Cloud -->
+    <path d="M 678 795 C 765 795 825 720 825 635 C 825 538 730 500 660 528" />
+    
+    <!-- Top Central Massive Dome Arch -->
+    <path d="M 336 532 C 320 405 680 405 664 532" />
+
+    <!-- Organic Interior Fabric Crease Linework -->
+    <path d="M 280 670 C 295 700 315 720 355 720" stroke-width="12" opacity="0.35" />
+    <path d="M 720 670 C 705 700 685 720 645 720" stroke-width="12" opacity="0.35" />
+  </g>
+
+  <!-- ========================================================= -->
+  <!-- LAYER 3: GREEN MONETIZATION DOLLAR SIGN EMBEDDED ELEMENT  -->
+  <!-- ========================================================= -->
+  <g id="brand-currency-symbol">
+    <!-- Clean Structural Central Vertical Spine Intersecting Hat -->
+    <path d="M 500 405 L 500 935" stroke="#108043" stroke-width="32" stroke-linecap="round" />
+    
+    <!-- Bold 'S' Curvature Body overlaying core geometry -->
+    <path d="M 590 535 
+             C 485 490 400 540 400 610 
+             C 400 700 600 685 600 780 
+             C 600 855 500 890 410 840" 
+          fill="none" stroke="#108043" stroke-width="34" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+</svg>
