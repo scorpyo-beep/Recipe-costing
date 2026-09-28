@@ -1,1 +1,131 @@
-const CACHE='kitchen-costing-v1';const CORE=['./','./index.html','./manifest.json','./icon.svg'];self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(a=>Promise.all(a.filter(x=>x!==CACHE).map(x=>caches.delete(x)))).then(()=>self.clients.claim())));self.addEventListener('fetch',e=>{if(e.request.mode==='navigate')e.respondWith(fetch(e.request).then(r=>{let c=r.clone();caches.open(CACHE).then(x=>x.put('./index.html',c));return r}).catch(()=>caches.match('./index.html')));else e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)))})
+const CACHE = 'kitchen-costing-v2';
+
+const CORE_FILES = [
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.svg'
+];
+
+
+/* INSTALL */
+
+self.addEventListener('install', event => {
+
+  event.waitUntil(
+
+    caches
+      .open(CACHE)
+      .then(cache => cache.addAll(CORE_FILES))
+      .then(() => self.skipWaiting())
+
+  );
+
+});
+
+
+/* ACTIVATE */
+
+self.addEventListener('activate', event => {
+
+  event.waitUntil(
+
+    caches
+      .keys()
+      .then(keys => {
+
+        return Promise.all(
+
+          keys
+            .filter(key => key !== CACHE)
+            .map(key => caches.delete(key))
+
+        );
+
+      })
+      .then(() => self.clients.claim())
+
+  );
+
+});
+
+
+/* FETCH */
+
+self.addEventListener('fetch', event => {
+
+  const request = event.request;
+
+
+  /*
+    For page navigation:
+    ALWAYS try the newest online version first.
+
+    This prevents the old broken index.html
+    from remaining stuck in the installed app.
+  */
+
+  if (request.mode === 'navigate') {
+
+    event.respondWith(
+
+      fetch(request)
+
+        .then(response => {
+
+          const copy = response.clone();
+
+          caches
+            .open(CACHE)
+            .then(cache => {
+
+              cache.put(
+                './index.html',
+                copy
+              );
+
+            });
+
+          return response;
+
+        })
+
+        .catch(() => {
+
+          return caches.match(
+            './index.html'
+          );
+
+        })
+
+    );
+
+    return;
+  }
+
+
+  /*
+    For other files:
+    use the cached version when available,
+    otherwise go to the network.
+  */
+
+  event.respondWith(
+
+    caches
+      .match(request)
+      .then(cachedResponse => {
+
+        if (cachedResponse) {
+
+          return cachedResponse;
+
+        }
+
+        return fetch(request);
+
+      })
+
+  );
+
+});
