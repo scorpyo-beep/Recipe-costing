@@ -1,191 +1,3634 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+
 <meta name="theme-color" content="#07558a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Kitchen Costing">
+
 <link rel="manifest" href="./manifest.json">
+
 <title>Kitchen Costing</title>
+
 <style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:#eef4f8;color:#17212b;font-family:Arial,sans-serif;padding-bottom:75px}
-header{position:sticky;top:0;z-index:5;background:#07558a;color:#fff;padding:14px;padding-top:calc(12px + env(safe-area-inset-top));box-shadow:0 2px 8px #0003}
-header h1{margin:0;font-size:21px}
-header small{opacity:.8}
-main{max-width:760px;margin:auto;padding:12px}
-.hidden{display:none!important}
-.card,.item{background:#fff;border:1px solid #d8e1e7;border-radius:13px;padding:13px;margin-bottom:11px;box-shadow:0 1px 3px #0001}
-h2{font-size:18px;margin:0 0 11px}
-h3{font-size:15px}
-label{display:block;font-size:12px;font-weight:bold;margin:8px 0 4px}
-input,select,textarea{width:100%;padding:10px;border:1px solid #bdccd5;border-radius:8px;font-size:16px;background:#fff}
-textarea{min-height:85px}
-.row{display:flex;gap:8px}
-.row>*{flex:1}
-button{border:0;border-radius:9px;padding:11px;font-weight:bold;font-size:14px;cursor:pointer}
-.blue{background:#07558a;color:white}
-.green{background:#238636;color:white}
-.red{background:#c62828;color:white}
-.orange{background:#df7b18;color:white}
-.light{background:#e8f0f5;color:#07558a}
-.full{width:100%;margin-top:7px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.stat{background:#f5f8fa;border:1px solid #d8e1e7;border-radius:10px;padding:11px}
-.stat b{display:block;font-size:23px;color:#07558a}
-.muted{color:#687782;font-size:12px}
-.chips{display:flex;gap:5px;flex-wrap:wrap;margin:7px 0}
-.chip{background:#e8f0f5;border-radius:99px;padding:5px 8px;font-size:10px;font-weight:bold}
-.price{color:#238636;font-weight:bold}
-.itemtop{display:flex;justify-content:space-between;align-items:center}
-.empty{text-align:center;color:#687782;padding:25px}
-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #d8e1e7;display:grid;grid-template-columns:repeat(5,1fr);z-index:10;padding-bottom:env(safe-area-inset-bottom)}
-nav button{background:#fff;color:#65737c;font-size:10px;padding:8px 2px;border:0}
-nav button.active{color:#07558a}
-nav span{display:block;font-size:20px}
-.recipeimg{width:100%;max-height:230px;object-fit:cover;border-radius:10px;margin:10px 0}
-.ingrow{display:grid;grid-template-columns:1.45fr .6fr .65fr 65px 35px;gap:4px;align-items:end;margin-bottom:7px}
-.ingrow input,.ingrow select{font-size:13px;padding:8px}
-.total{background:#edf7f0;border:1px solid #b9ddc5;border-radius:10px;padding:11px;margin-top:8px}
-.total div{display:flex;justify-content:space-between;margin:4px 0}
-.big{font-size:20px;font-weight:900}
-.notice{background:#fff7e8;border:1px solid #efd28f;padding:9px;border-radius:8px;font-size:11px;margin-top:8px}
-@media(max-width:390px){.ingrow{grid-template-columns:1.3fr .55fr .6fr 58px 32px}}
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  background:#eef4f8;
+  color:#17212b;
+  font-family:Arial,sans-serif;
+  padding-bottom:80px;
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:#07558a;
+  color:white;
+  padding:14px;
+  padding-top:calc(12px + env(safe-area-inset-top));
+  box-shadow:0 2px 8px #0003;
+}
+
+header h1{
+  margin:0;
+  font-size:21px;
+}
+
+header small{
+  opacity:.8;
+}
+
+main{
+  max-width:760px;
+  margin:auto;
+  padding:12px;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.card,
+.item{
+  background:white;
+  border:1px solid #d8e1e7;
+  border-radius:13px;
+  padding:13px;
+  margin-bottom:11px;
+  box-shadow:0 1px 3px #0001;
+}
+
+h2{
+  font-size:18px;
+  margin:0 0 11px;
+}
+
+h3{
+  font-size:15px;
+  margin-top:18px;
+}
+
+label{
+  display:block;
+  font-size:12px;
+  font-weight:bold;
+  margin:8px 0 4px;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:10px;
+  border:1px solid #bdccd5;
+  border-radius:8px;
+  font-size:16px;
+  background:white;
+  color:#17212b;
+}
+
+textarea{
+  min-height:85px;
+  resize:vertical;
+}
+
+button{
+  border:0;
+  border-radius:9px;
+  padding:11px;
+  font-weight:bold;
+  font-size:14px;
+  touch-action:manipulation;
+}
+
+button:active{
+  transform:scale(.98);
+}
+
+.blue{
+  background:#07558a;
+  color:white;
+}
+
+.green{
+  background:#238636;
+  color:white;
+}
+
+.red{
+  background:#c62828;
+  color:white;
+}
+
+.orange{
+  background:#df7b18;
+  color:white;
+}
+
+.light{
+  background:#e8f0f5;
+  color:#07558a;
+}
+
+.full{
+  width:100%;
+  margin-top:8px;
+}
+
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.stat{
+  background:#f5f8fa;
+  border:1px solid #d8e1e7;
+  border-radius:10px;
+  padding:11px;
+}
+
+.stat b{
+  display:block;
+  font-size:23px;
+  color:#07558a;
+}
+
+.muted{
+  color:#687782;
+  font-size:12px;
+}
+
+.chips{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+  margin:7px 0;
+}
+
+.chip{
+  background:#e8f0f5;
+  border-radius:99px;
+  padding:5px 8px;
+  font-size:10px;
+  font-weight:bold;
+}
+
+.price{
+  color:#238636;
+  font-weight:bold;
+}
+
+.itemtop{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.empty{
+  text-align:center;
+  color:#687782;
+  padding:25px;
+}
+
+.row{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+
+.row button{
+  flex:1;
+}
+
+nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  border-top:1px solid #d8e1e7;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  z-index:50;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+
+nav button{
+  background:white;
+  color:#65737c;
+  font-size:10px;
+  padding:8px 2px;
+}
+
+nav button.active{
+  color:#07558a;
+}
+
+nav span{
+  display:block;
+  font-size:20px;
+}
+
+.recipeimg{
+  width:100%;
+  max-height:230px;
+  object-fit:cover;
+  border-radius:10px;
+  margin-top:5px;
+}
+
+.ingrow{
+  display:grid;
+  grid-template-columns:1.4fr .6fr .65fr 65px 35px;
+  gap:4px;
+  align-items:end;
+  margin-bottom:7px;
+}
+
+.ingrow input,
+.ingrow select{
+  font-size:13px;
+  padding:8px;
+}
+
+.total{
+  background:#edf7f0;
+  border:1px solid #b9ddc5;
+  border-radius:10px;
+  padding:11px;
+  margin-top:8px;
+}
+
+.total div{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  margin:4px 0;
+}
+
+.big{
+  font-size:20px;
+  font-weight:900;
+}
+
+.notice{
+  background:#fff7e8;
+  border:1px solid #efd28f;
+  padding:9px;
+  border-radius:8px;
+  font-size:11px;
+  margin-top:8px;
+}
+
+#ocrtext{
+  min-height:130px;
+}
+
+@media(max-width:390px){
+
+  main{
+    padding:8px;
+  }
+
+  .ingrow{
+    grid-template-columns:1.3fr .55fr .6fr 58px 32px;
+  }
+
+  .ingrow label{
+    font-size:9px;
+  }
+}
 </style>
 </head>
+
 <body>
-<header><h1>🍳 Kitchen Costing</h1><small>Recipes • Ingredients • Food Cost • Pricing</small></header>
+
+<header>
+  <h1>🍳 Kitchen Costing</h1>
+  <small>Recipes • Ingredients • Food Cost • Pricing</small>
+</header>
+
 <main>
+
+<!-- HOME -->
+
 <section id="home">
-    <div class="card">
-        <h2>Dashboard</h2>
-        <div class="stats">
-            <div class="stat"><b id="nr">0</b><span>Recipes</span></div>
-            <div class="stat"><b id="ni">0</b><span>Ingredients</span></div>
-            <div class="stat"><b id="nc">0</b><span>Categories Used</span></div>
-            <div class="stat"><b id="nf">0%</b><span>Average Food Cost</span></div>
-        </div>
+
+  <div class="card">
+    <h2>Dashboard</h2>
+
+    <div class="stats">
+
+      <div class="stat">
+        <b id="nr">0</b>
+        <span>Recipes</span>
+      </div>
+
+      <div class="stat">
+        <b id="ni">0</b>
+        <span>Ingredients</span>
+      </div>
+
+      <div class="stat">
+        <b id="nc">0</b>
+        <span>Categories Used</span>
+      </div>
+
+      <div class="stat">
+        <b id="nf">0%</b>
+        <span>Average Food Cost</span>
+      </div>
+
     </div>
-    <div class="card">
-        <h2>Quick Actions</h2>
-        <div class="grid2">
-            <button class="blue" onclick="page('ingredients');addIngredient()">➕ Ingredient</button>
-            <button class="green" onclick="page('recipes');newRecipe()">📖 Recipe</button>
-            <button class="orange" onclick="page('scan')">📸 Invoice</button>
-            <button class="light" onclick="page('settings')">⚙️ Settings</button>
-        </div>
+  </div>
+
+  <div class="card">
+
+    <h2>Quick Actions</h2>
+
+    <div class="grid2">
+
+      <button class="blue" id="quickIngredient">
+        ➕ Ingredient
+      </button>
+
+      <button class="green" id="quickRecipe">
+        📖 Recipe
+      </button>
+
+      <button class="orange" id="quickScan">
+        📸 Invoice
+      </button>
+
+      <button class="light" id="quickSettings">
+        ⚙️ Settings
+      </button>
+
     </div>
-    <div class="card">
-        <h2>Recent Recipes</h2>
-        <div id="recent"></div>
-    </div>
+
+  </div>
+
+  <div class="card">
+
+    <h2>Recent Recipes</h2>
+
+    <div id="recent"></div>
+
+  </div>
+
 </section>
+
+
+<!-- INGREDIENTS -->
 
 <section id="ingredients" class="hidden">
-    <div class="card">
-        <h2>Ingredient Price Log</h2>
-        <input id="isearch" placeholder="Search ingredients..." oninput="renderIngredients()">
-        <button class="blue full" onclick="addIngredient()">➕ Add Ingredient</button>
-    </div>
-    <div id="iform" class="card hidden"></div>
-    <div id="ilist"></div>
+
+  <div class="card">
+
+    <h2>Ingredient Price Log</h2>
+
+    <input
+      id="isearch"
+      placeholder="Search ingredients..."
+    >
+
+    <button
+      class="blue full"
+      id="addIngredientBtn">
+      ➕ Add Ingredient
+    </button>
+
+  </div>
+
+  <div
+    id="iform"
+    class="card hidden">
+  </div>
+
+  <div id="ilist"></div>
+
 </section>
+
+
+<!-- RECIPES -->
 
 <section id="recipes" class="hidden">
-    <div id="rlistview">
-        <div class="card">
-            <h2>📖 Recipe Book</h2>
-            <input id="rsearch" placeholder="Search recipes..." oninput="renderRecipes()">
-            <div class="grid2" style="margin-top:8px">
-                <button class="light" onclick="filter='All';renderRecipes()">📚 All</button>
-                <button class="light" onclick="filter='Soups';renderRecipes()">🍲 Soups</button>
-                <button class="light" onclick="filter='Sauces';renderRecipes()">🥣 Sauces</button>
-                <button class="light" onclick="filter='Beef';renderRecipes()">🥩 Beef</button>
-                <button class="light" onclick="filter='Chicken';renderRecipes()">🍗 Chicken</button>
-                <button class="light" onclick="filter='Seafood';renderRecipes()">🐟 Seafood</button>
-                <button class="light" onclick="filter='Vegetarian';renderRecipes()">🥦 Vegetarian</button>
-                <button class="light" onclick="filter='Baked';renderRecipes()">🥖 Baked</button>
-                <button class="light" onclick="filter='Desserts';renderRecipes()">🍰 Desserts</button>
-            </div>
-        </div>
-        <div id="rlist"></div>
+
+  <div id="rlistview">
+
+    <div class="card">
+
+      <h2>📖 Recipe Book</h2>
+
+      <input
+        id="rsearch"
+        placeholder="Search recipes..."
+      >
+
+      <div
+        class="grid2"
+        style="margin-top:8px">
+
+        <button
+          class="light filterBtn"
+          data-filter="All">
+          📚 All
+        </button>
+
+        <button
+          class="light filterBtn"
+          data-filter="Soups">
+          🍲 Soups
+        </button>
+
+        <button
+          class="light filterBtn"
+          data-filter="Sauces">
+          🥣 Sauces
+        </button>
+
+        <button
+          class="light filterBtn"
+          data-filter="Beef">
+          🥩 Beef
+        </button>
+
+        <button
+          class="light filterBtn"
+          data-filter="Chicken">
+          🍗 Chicken
+        </button>
+
+        <button
+          class="light filterBtn"
+          data-filter="Seafood">
+          🐟 Seafood
+        </button>
+
+        <button
+          class="light filterBtn"
+          data-filter="Vegetarian">
+          🥦 Vegetarian
+        </button>
+
+        <button
+          class="light filterBtn"
+          data-filter="Baked">
+          🥖 Baked
+        </button>
+
+        <button
+          class="light filterBtn"
+          data-filter="Desserts">
+          🍰 Desserts
+        </button>
+
+      </div>
+
+      <button
+        class="green full"
+        id="newRecipeBtn">
+        ➕ New Recipe
+      </button>
+
     </div>
-    <div id="reditor" class="card hidden"></div>
+
+    <div id="rlist"></div>
+
+  </div>
+
+  <div
+    id="reditor"
+    class="card hidden">
+  </div>
+
 </section>
+
+
+<!-- INVOICE -->
 
 <section id="scan" class="hidden">
-    <div class="card">
-        <h2>📸 Invoice Scanner</h2>
-        <p class="muted">Take a supplier invoice photo. Text recognition is used as a starting point; always verify details.</p>
-        <input id="invoice" type="file" accept="image/*" capture="environment" onchange="invoicePreview(event)">
-        <img id="ipreview" class="recipeimg hidden" alt="Invoice Preview">
-        <button id="ocrbtn" class="orange full" disabled onclick="ocr()">🔎 Read Invoice</button>
-        <div id="ocrstatus" class="muted" style="margin-top:8px"></div>
-        <textarea id="ocrtext" placeholder="Recognized text..." style="margin-top:8px"></textarea>
+
+  <div class="card">
+
+    <h2>📸 Invoice Scanner</h2>
+
+    <p class="muted">
+      Take a supplier invoice photo.
+      OCR will read the text and you can verify
+      the information before saving it.
+    </p>
+
+    <input
+      id="invoice"
+      type="file"
+      accept="image/*"
+      capture="environment">
+
+    <img
+      id="ipreview"
+      class="recipeimg hidden">
+
+    <button
+      id="ocrbtn"
+      class="orange full"
+      disabled>
+      🔎 Read Invoice
+    </button>
+
+    <div
+      id="ocrstatus"
+      class="muted">
     </div>
+
+    <textarea
+      id="ocrtext"
+      placeholder="Recognized invoice text will appear here...">
+    </textarea>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>Verified Invoice Entry</h2>
+
+    <div id="scanform"></div>
+
+  </div>
+
 </section>
+
+
+<!-- SETTINGS -->
 
 <section id="settings" class="hidden">
-    <div class="card">
-        <h2>⚙️ Backup & Data</h2>
-        <p class="muted">Everything is stored locally on this device.</p>
-        <button class="blue full" onclick="exportData()">⬇ Export Backup</button>
-        <label class="light full" style="text-align:center;cursor:pointer;display:block;padding:11px;border-radius:9px;font-weight:bold;margin-top:7px">
-            ⬆ Import Backup<input type="file" accept=".json" onchange="importData(event)" style="display:none">
-        </label>
-        <button class="red full" onclick="clearData()">🗑 Delete All Data</button>
+
+  <div class="card">
+
+    <h2>⚙️ Backup & Data</h2>
+
+    <p class="muted">
+      Your recipes and ingredient prices are stored
+      on this device. Export a backup before
+      changing phones.
+    </p>
+
+    <button
+      class="blue full"
+      id="exportBtn">
+      ⬇ Export Backup
+    </button>
+
+    <label
+      class="light full"
+      style="text-align:center;cursor:pointer">
+
+      ⬆ Import Backup
+
+      <input
+        id="importFile"
+        type="file"
+        accept=".json"
+        style="display:none">
+
+    </label>
+
+    <button
+      class="red full"
+      id="clearBtn">
+      🗑 Delete All Data
+    </button>
+
+  </div>
+
+  <div class="card">
+
+    <h2>Pricing</h2>
+
+    <div class="notice">
+
+      <b>Markup:</b><br>
+      $5 cost + 100% markup = $10 selling price.
+
+      <br><br>
+
+      <b>Target food cost:</b><br>
+      $5 cost at 25% food cost = $20 selling price.
+
     </div>
-    <div class="card">
-        <h2>Pricing</h2>
-        <div class="notice">Markup pricing: $5 cost + 100% markup = $10. Target food cost: $5 cost at 25% = $20 selling price.</div>
-    </div>
+
+  </div>
+
 </section>
+
 </main>
 
+
+<!-- BOTTOM NAV -->
+
 <nav>
-    <button id="nh" class="active" onclick="page('home')"><span>🏠</span>Home</button>
-    <button id="niav" onclick="page('ingredients')"><span>🥕</span>Ingredients</button>
-    <button id="nrav" onclick="page('recipes')"><span>📖</span>Recipes</button>
-    <button id="nsc" onclick="page('scan')"><span>📸</span>Invoice</button>
-    <button id="nset" onclick="page('settings')"><span>⚙️</span>Settings</button>
+
+  <button
+    id="nh"
+    class="active">
+
+    <span>🏠</span>
+    Home
+
+  </button>
+
+  <button id="niav">
+
+    <span>🥕</span>
+    Ingredients
+
+  </button>
+
+  <button id="nrav">
+
+    <span>📖</span>
+    Recipes
+
+  </button>
+
+  <button id="nsc">
+
+    <span>📸</span>
+    Invoice
+
+  </button>
+
+  <button id="nset">
+
+    <span>⚙️</span>
+    Settings
+
+  </button>
+
 </nav>
 
+
+<!-- OCR LIBRARY -->
+
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+
 <script>
-const KEY='kitchen_costing_v1',CATS=['Soups','Sauces','Beef','Chicken','Seafood','Vegetarian','Baked','Desserts'];
-let D=load(),filter='All',editI=null,editR=null;
 
-function load(){try{let x=JSON.parse(localStorage.getItem(KEY));if(x&&Array.isArray(x.ingredients)&&Array.isArray(x.recipes))return x}catch(e){}return{ingredients:[],recipes:[]}}
-function save(){localStorage.setItem(KEY,JSON.stringify(D));updateDashboard()}
-function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
-function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function money(x){return'$'+Number(x||0).toFixed(2)}
+'use strict';
 
-function page(p){
-    ['home','ingredients','recipes','scan','settings'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==p));
-    document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
-    let btnMap={home:'nh',ingredients:'niav',recipes:'nrav',scan:'nsc',settings:'nset'};
-    if(btnMap[p])document.getElementById(btnMap[p]).classList.add('active');
-    if(p==='home')updateDashboard();
-    if(p==='ingredients')renderIngredients();
-    if(p==='recipes')renderRecipes();
+
+/* =========================
+   DATA
+========================= */
+
+const STORAGE_KEY =
+  'kitchen_costing_v1';
+
+const CATEGORIES = [
+  'Soups',
+  'Sauces',
+  'Beef',
+  'Chicken',
+  'Seafood',
+  'Vegetarian',
+  'Baked',
+  'Desserts'
+];
+
+let data = loadData();
+
+let currentFilter = 'All';
+
+let editingIngredientId = null;
+
+let editingRecipeId = null;
+
+
+/* =========================
+   BASIC HELPERS
+========================= */
+
+function el(id){
+  return document.getElementById(id);
 }
 
-function updateDashboard(){
-    document.getElementById('nr').innerText=D.recipes.length;
-    document.getElementById('ni').innerText=D.ingredients.length;
-    let cats=new Set(D.recipes.map(r=>r.category).filter(Boolean));
-    document.getElementById('nc').innerText=cats.size;
-    
-    let totalCost=0,totalPrice=0;
-    D.recipes.forEach(r=>{
-        let cost=calcRecipeCost(r);
-        if(r.price>0){totalCost+=cost;totalPrice+=r.price;}
-    });
-    let avgFc=totalPrice>0?(totalCost/totalPrice)*100:0;
-    document.getElementById('nf').innerText=avgFc.toFixed(0)+'%';
-    renderRecent();
+
+function loadData(){
+
+  try{
+
+    const saved =
+      JSON.parse(
+        localStorage.getItem(STORAGE_KEY)
+      );
+
+    if(
+      saved &&
+      Array.isArray(saved.ingredients) &&
+      Array.isArray(saved.recipes)
+    ){
+      return saved;
+    }
+
+  }catch(error){
+
+    console.log(
+      'Could not load saved data',
+      error
+    );
+
+  }
+
+  return {
+    ingredients:[],
+    recipes:[]
+  };
 }
 
-function renderRecent(){
-    let out=document.getElementById('recent');
+
+function saveData(){
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(data)
+  );
+
+}
+
+
+function newId(){
+
+  return (
+    Date.now().toString(36) +
+    Math.random()
+      .toString(36)
+      .substring(2,8)
+  );
+
+}
+
+
+function escapeHTML(value){
+
+  return String(value ?? '')
+    .replace(
+      /[&<>"']/g,
+      function(character){
+
+        return {
+          '&':'&amp;',
+          '<':'&lt;',
+          '>':'&gt;',
+          '"':'&quot;',
+          "'":'&#39;'
+        }[character];
+
+      }
+    );
+
+}
+
+
+function money(value){
+
+  return '$' +
+    Number(value || 0)
+      .toFixed(2);
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function showPage(page){
+
+  const pages = [
+    'home',
+    'ingredients',
+    'recipes',
+    'scan',
+    'settings'
+  ];
+
+  pages.forEach(
+    function(name){
+
+      el(name)
+        .classList
+        .toggle(
+          'hidden',
+          name !== page
+        );
+
+    }
+  );
+
+
+  const navMap = {
+    home:'nh',
+    ingredients:'niav',
+    recipes:'nrav',
+    scan:'nsc',
+    settings:'nset'
+  };
+
+
+  document
+    .querySelectorAll('nav button')
+    .forEach(
+      function(button){
+        button.classList.remove('active');
+      }
+    );
+
+
+  if(navMap[page]){
+
+    el(navMap[page])
+      .classList
+      .add('active');
+
+  }
+
+
+  window.scrollTo(0,0);
+
+
+  if(page === 'home'){
+    renderHome();
+  }
+
+  if(page === 'ingredients'){
+    renderIngredients();
+  }
+
+  if(page === 'recipes'){
+    renderRecipes();
+  }
+
+  if(page === 'scan'){
+    renderScanForm();
+  }
+
+}
+
+
+/* =========================
+   UNIT CONVERSION
+========================= */
+
+function normalizeUnit(quantity,unit){
+
+  const u =
+    String(unit || '')
+      .toLowerCase()
+      .trim();
+
+
+  const conversion = {
+
+    kg:[1000,'g'],
+
+    g:[1,'g'],
+
+    lb:[453.592,'g'],
+
+    oz:[28.3495,'g'],
+
+    l:[1000,'ml'],
+
+    ml:[1,'ml'],
+
+    dozen:[12,'each'],
+
+    each:[1,'each']
+
+  };
+
+
+  if(conversion[u]){
+
+    return {
+
+      quantity:
+        Number(quantity || 0) *
+        conversion[u][0],
+
+      unit:
+        conversion[u][1]
+
+    };
+
+  }
+
+
+  return {
+
+    quantity:
+      Number(quantity || 0),
+
+    unit:u
+
+  };
+
+}
+
+
+function getIngredientCost(
+  ingredient,
+  quantity,
+  unit
+){
+
+  if(!ingredient){
+    return null;
+  }
+
+
+  const used =
+    normalizeUnit(
+      quantity,
+      unit
+    );
+
+
+  const purchased =
+    normalizeUnit(
+      ingredient.qty,
+      ingredient.unit
+    );
+
+
+  if(
+    used.unit !== purchased.unit ||
+    purchased.quantity <= 0
+  ){
+
+    return null;
+
+  }
+
+
+  return (
+    Number(ingredient.price || 0) *
+    used.quantity /
+    purchased.quantity
+  );
+
+}
+
+
+function findIngredient(id){
+
+  return data.ingredients.find(
+    function(item){
+      return item.id === id;
+    }
+  );
+
+}
+
+
+/* =========================
+   RECIPE COST
+========================= */
+
+function calculateRecipe(recipe){
+
+  let total = 0;
+
+  let missing = 0;
+
+
+  (recipe.ingredients || [])
+    .forEach(
+      function(item){
+
+        const ingredient =
+          findIngredient(
+            item.ingredientId
+          );
+
+
+        const cost =
+          getIngredientCost(
+            ingredient,
+            item.qty,
+            item.unit
+          );
+
+
+        if(cost === null){
+
+          missing++;
+
+        }else{
+
+          total += cost;
+
+        }
+
+      }
+    );
+
+
+  const yieldAmount =
+    Number(recipe.yield || 1) || 1;
+
+
+  const perPortion =
+    total / yieldAmount;
+
+
+  const pricingValue =
+    Number(recipe.markup || 0);
+
+
+  let sellingPrice = 0;
+
+
+  if(recipe.mode === 'food'){
+
+    /*
+      Target food cost.
+
+      Example:
+      $5 cost / 25% = $20 selling price.
+    */
+
+    sellingPrice =
+      pricingValue > 0
+        ? perPortion /
+          (pricingValue / 100)
+        : 0;
+
+  }else{
+
+    /*
+      Markup.
+
+      Example:
+      $5 cost + 100% = $10.
+    */
+
+    sellingPrice =
+      perPortion *
+      (1 + pricingValue / 100);
+
+  }
+
+
+  const foodCost =
+    sellingPrice > 0
+      ? (
+          perPortion /
+          sellingPrice
+        ) * 100
+      : 0;
+
+
+  return {
+
+    total:total,
+
+    per:perPortion,
+
+    sell:sellingPrice,
+
+    food:foodCost,
+
+    missing:missing
+
+  };
+
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+function renderHome(){
+
+  el('nr').textContent =
+    data.recipes.length;
+
+
+  el('ni').textContent =
+    data.ingredients.length;
+
+
+  const categories =
+    new Set(
+      data.recipes
+        .map(
+          function(recipe){
+            return recipe.category;
+          }
+        )
+        .filter(Boolean)
+    );
+
+
+  el('nc').textContent =
+    categories.size;
+
+
+  const foodCosts =
+    data.recipes
+      .map(
+        function(recipe){
+          return calculateRecipe(recipe).food;
+        }
+      )
+      .filter(
+        function(value){
+          return value > 0;
+        }
+      );
+
+
+  let average = 0;
+
+
+  if(foodCosts.length){
+
+    average =
+      foodCosts.reduce(
+        function(total,value){
+          return total + value;
+        },
+        0
+      ) /
+      foodCosts.length;
+
+  }
+
+
+  el('nf').textContent =
+    average.toFixed(1) +
+    '%';
+
+
+  const recent =
+    data.recipes
+      .slice()
+      .reverse()
+      .slice(0,5);
+
+
+  el('recent').innerHTML =
+    recent.length
+      ? recent.map(recipeCard).join('')
+      : '<div class="empty">No recipes yet.</div>';
+
+
+  attachRecipeButtons();
+
+}
+
+
+/* =========================
+   INGREDIENTS
+========================= */
+
+function openIngredientForm(id){
+
+  editingIngredientId =
+    id || null;
+
+
+  const item =
+    id
+      ? findIngredient(id)
+      : {
+
+          name:'',
+
+          category:'',
+
+          supplier:'',
+
+          qty:'',
+
+          unit:'kg',
+
+          price:'',
+
+          date:
+            new Date()
+              .toISOString()
+              .slice(0,10),
+
+          notes:''
+
+        };
+
+
+  const units = [
+    'kg',
+    'g',
+    'lb',
+    'oz',
+    'l',
+    'ml',
+    'each',
+    'dozen'
+  ];
+
+
+  el('iform')
+    .classList
+    .remove('hidden');
+
+
+  el('iform').innerHTML = `
+
+    <h2>
+      ${id ? '✏️ Edit' : '➕ Add'}
+      Ingredient
+    </h2>
+
+
+    <label>Name *</label>
+
+    <input
+      id="ingredientName"
+      value="${escapeHTML(item.name)}">
+
+
+    <div class="grid2">
+
+      <div>
+
+        <label>Category</label>
+
+        <input
+          id="ingredientCategory"
+          value="${escapeHTML(item.category || '')}">
+
+      </div>
+
+
+      <div>
+
+        <label>Supplier</label>
+
+        <input
+          id="ingredientSupplier"
+          value="${escapeHTML(item.supplier || '')}">
+
+      </div>
+
+    </div>
+
+
+    <div class="grid2">
+
+      <div>
+
+        <label>Purchase Quantity *</label>
+
+        <input
+          id="ingredientQty"
+          type="number"
+          step="any"
+          value="${escapeHTML(item.qty)}">
+
+      </div>
+
+
+      <div>
+
+        <label>Purchase Unit *</label>
+
+        <select id="ingredientUnit">
+
+          ${units.map(
+            function(unit){
+
+              return `
+                <option
+                  value="${unit}"
+                  ${item.unit === unit ? 'selected' : ''}>
+                  ${unit}
+                </option>
+              `;
+
+            }
+          ).join('')}
+
+        </select>
+
+      </div>
+
+    </div>
+
+
+    <label>Purchase Price *</label>
+
+    <input
+      id="ingredientPrice"
+      type="number"
+      step="0.01"
+      value="${escapeHTML(item.price)}">
+
+
+    <label>Date</label>
+
+    <input
+      id="ingredientDate"
+      type="date"
+      value="${escapeHTML(item.date || '')}">
+
+
+    <label>Notes</label>
+
+    <textarea id="ingredientNotes">${escapeHTML(item.notes || '')}</textarea>
+
+
+    <div class="row">
+
+      <button
+        class="light"
+        id="cancelIngredient">
+        Cancel
+      </button>
+
+      <button
+        class="blue"
+        id="saveIngredient">
+        Save
+      </button>
+
+    </div>
+
+  `;
+
+
+  el('cancelIngredient')
+    .addEventListener(
+      'click',
+      closeIngredientForm
+    );
+
+
+  el('saveIngredient')
+    .addEventListener(
+      'click',
+      saveIngredient
+    );
+
+}
+
+
+function closeIngredientForm(){
+
+  editingIngredientId = null;
+
+  el('iform')
+    .classList
+    .add('hidden');
+
+}
+
+
+function saveIngredient(){
+
+  const name =
+    el('ingredientName')
+      .value
+      .trim();
+
+
+  const qty =
+    Number(
+      el('ingredientQty').value
+    );
+
+
+  const price =
+    Number(
+      el('ingredientPrice').value
+    );
+
+
+  if(
+    !name ||
+    !Number.isFinite(qty) ||
+    qty <= 0 ||
+    !Number.isFinite(price) ||
+    price < 0
+  ){
+
+    alert(
+      'Enter a name, quantity and price.'
+    );
+
+    return;
+
+  }
+
+
+  const item = {
+
+    id:
+      editingIngredientId ||
+      newId(),
+
+    name:name,
+
+    category:
+      el('ingredientCategory')
+        .value
+        .trim(),
+
+    supplier:
+      el('ingredientSupplier')
+        .value
+        .trim(),
+
+    qty:qty,
+
+    unit:
+      el('ingredientUnit').value,
+
+    price:price,
+
+    date:
+      el('ingredientDate').value,
+
+    notes:
+      el('ingredientNotes').value
+
+  };
+
+
+  const index =
+    data.ingredients.findIndex(
+      function(existing){
+        return existing.id === item.id;
+      }
+    );
+
+
+  if(index === -1){
+
+    data.ingredients.push(item);
+
+  }else{
+
+    data.ingredients[index] = item;
+
+  }
+
+
+  saveData();
+
+  closeIngredientForm();
+
+  renderIngredients();
+
+  renderHome();
+
+  renderRecipes();
+
+}
+
+
+function renderIngredients(){
+
+  const search =
+    (
+      el('isearch').value || ''
+    ).toLowerCase();
+
+
+  const list =
+    data.ingredients.filter(
+      function(item){
+
+        const text =
+          [
+            item.name,
+            item.category,
+            item.supplier
+          ]
+          .join(' ')
+          .toLowerCase();
+
+
+        return text.includes(search);
+
+      }
+    );
+
+
+  el('ilist').innerHTML =
+    list.length
+      ? list.map(
+          function(item){
+
+            const normalized =
+              normalizeUnit(
+                item.qty,
+                item.unit
+              );
+
+
+            const unitCost =
+              normalized.quantity
+                ? Number(item.price) /
+                  normalized.quantity
+                : 0;
+
+
+            return `
+
+              <div class="item">
+
+                <div class="itemtop">
+
+                  <div>
+
+                    <b>
+                      ${escapeHTML(item.name)}
+                    </b>
+
+                    <div class="muted">
+
+                      ${escapeHTML(
+                        item.category ||
+                        'Other'
+                      )}
+
+                      ${
+                        item.supplier
+                          ? ' • ' +
+                            escapeHTML(
+                              item.supplier
+                            )
+                          : ''
+                      }
+
+                    </div>
+
+                  </div>
+
+
+                  <b class="price">
+                    ${money(item.price)}
+                  </b>
+
+                </div>
+
+
+                <div class="chips">
+
+                  <span class="chip">
+                    Buy
+                    ${escapeHTML(item.qty)}
+                    ${escapeHTML(item.unit)}
+                  </span>
+
+                  <span class="chip">
+                    ${money(unitCost)}
+                    /
+                    ${escapeHTML(normalized.unit)}
+                  </span>
+
+                </div>
+
+
+                <div class="row">
+
+                  <button
+                    class="light editIngredient"
+                    data-id="${item.id}">
+                    ✏️ Edit
+                  </button>
+
+                  <button
+                    class="red deleteIngredient"
+                    data-id="${item.id}">
+                    Delete
+                  </button>
+
+                </div>
+
+              </div>
+
+            `;
+
+          }
+        ).join('')
+      : '<div class="card empty">No ingredients found.</div>';
+
+
+  document
+    .querySelectorAll('.editIngredient')
+    .forEach(
+      function(button){
+
+        button.addEventListener(
+          'click',
+          function(){
+
+            openIngredientForm(
+              button.dataset.id
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+  document
+    .querySelectorAll('.deleteIngredient')
+    .forEach(
+      function(button){
+
+        button.addEventListener(
+          'click',
+          function(){
+
+            deleteIngredient(
+              button.dataset.id
+            );
+
+          }
+        );
+
+      }
+    );
+
+}
+
+
+function deleteIngredient(id){
+
+  if(
+    !confirm(
+      'Delete this ingredient?'
+    )
+  ){
+    return;
+  }
+
+
+  data.ingredients =
+    data.ingredients.filter(
+      function(item){
+        return item.id !== id;
+      }
+    );
+
+
+  saveData();
+
+  renderIngredients();
+
+  renderHome();
+
+  renderRecipes();
+
+}
+
+
+/* =========================
+   RECIPE CARDS
+========================= */
+
+function recipeCard(recipe){
+
+  const cost =
+    calculateRecipe(recipe);
+
+
+  return `
+
+    <div class="item">
+
+      <div class="itemtop">
+
+        <b>
+          ${escapeHTML(recipe.name)}
+        </b>
+
+        <b class="price">
+          ${money(cost.sell)}
+        </b>
+
+      </div>
+
+
+      ${
+        recipe.photo
+          ? `
+            <img
+              class="recipeimg"
+              src="${recipe.photo}">
+          `
+          : ''
+      }
+
+
+      <div class="muted">
+
+        ${escapeHTML(recipe.category)}
+
+        • Yield
+        ${escapeHTML(recipe.yield)}
+        ${escapeHTML(recipe.yunit || 'portion')}
+
+      </div>
+
+
+      <div class="chips">
+
+        <span class="chip">
+          Cost ${money(cost.total)}
+        </span>
+
+        <span class="chip">
+          ${money(cost.per)}/portion
+        </span>
+
+        <span class="chip">
+
+          ${
+            recipe.mode === 'food'
+              ? 'Target food ' +
+                recipe.markup +
+                '%'
+              : 'Markup ' +
+                recipe.markup +
+                '%'
+          }
+
+        </span>
+
+        <span class="chip">
+          Food ${cost.food.toFixed(1)}%
+        </span>
+
+      </div>
+
+
+      ${
+        cost.missing
+          ? `
+            <div class="notice">
+              ${cost.missing}
+              ingredient(s) could not be costed
+              because the units do not match.
+            </div>
+          `
+          : ''
+      }
+
+
+      <div class="row">
+
+        <button
+          class="light editRecipe"
+          data-id="${recipe.id}">
+          ✏️ Edit
+        </button>
+
+        <button
+          class="red deleteRecipe"
+          data-id="${recipe.id}">
+          Delete
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================
+   RECIPES
+========================= */
+
+function renderRecipes(){
+
+  if(editingRecipeId){
+    return;
+  }
+
+
+  const search =
+    (
+      el('rsearch').value || ''
+    ).toLowerCase();
+
+
+  const recipes =
+    data.recipes.filter(
+      function(recipe){
+
+        const categoryMatches =
+          currentFilter === 'All' ||
+          recipe.category === currentFilter;
+
+
+        const text =
+          [
+            recipe.name,
+            recipe.description,
+            recipe.category
+          ]
+          .join(' ')
+          .toLowerCase();
+
+
+        return (
+          categoryMatches &&
+          text.includes(search)
+        );
+
+      }
+    );
+
+
+  el('rlist').innerHTML =
+    recipes.length
+      ? recipes
+          .map(recipeCard)
+          .join('')
+      : '<div class="card empty">No recipes found.</div>';
+
+
+  attachRecipeButtons();
+
+}
+
+
+function attachRecipeButtons(){
+
+  document
+    .querySelectorAll('.editRecipe')
+    .forEach(
+      function(button){
+
+        button.addEventListener(
+          'click',
+          function(){
+
+            editRecipe(
+              button.dataset.id
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+  document
+    .querySelectorAll('.deleteRecipe')
+    .forEach(
+      function(button){
+
+        button.addEventListener(
+          'click',
+          function(){
+
+            deleteRecipe(
+              button.dataset.id
+            );
+
+          }
+        );
+
+      }
+    );
+
+}
+
+
+function newRecipe(){
+
+  editingRecipeId = 'new';
+
+
+  openRecipeEditor({
+
+    id:'new',
+
+    name:'',
+
+    category:'Beef',
+
+    description:'',
+
+    photo:'',
+
+    yield:1,
+
+    yunit:'portion',
+
+    mode:'markup',
+
+    markup:100,
+
+    ingredients:[],
+
+    instructions:''
+
+  });
+
+}
+
+
+function editRecipe(id){
+
+  const recipe =
+    data.recipes.find(
+      function(item){
+        return item.id === id;
+      }
+    );
+
+
+  if(!recipe){
+    return;
+  }
+
+
+  editingRecipeId = id;
+
+  openRecipeEditor(recipe);
+
+}
+
+
+function openRecipeEditor(recipe){
+
+  el('rlistview')
+    .classList
+    .add('hidden');
+
+
+  el('reditor')
+    .classList
+    .remove('hidden');
+
+
+  el('reditor').innerHTML = `
+
+    <h2>
+      ${
+        recipe.id === 'new'
+          ? '➕ New Recipe'
+          : '✏️ Edit Recipe'
+      }
+    </h2>
+
+
+    <label>Recipe Name *</label>
+
+    <input
+      id="recipeName"
+      value="${escapeHTML(recipe.name)}">
+
+
+    <label>Category</label>
+
+    <select id="recipeCategory">
+
+      ${CATEGORIES.map(
+        function(category){
+
+          return `
+            <option
+              value="${category}"
+              ${
+                recipe.category === category
+                  ? 'selected'
+                  : ''
+              }>
+              ${category}
+            </option>
+          `;
+
+        }
+      ).join('')}
+
+    </select>
+
+
+    <label>Description</label>
+
+    <textarea id="recipeDescription">${escapeHTML(
+      recipe.description || ''
+    )}</textarea>
+
+
+    <label>Photo</label>
+
+    <input
+      id="recipeFile"
+      type="file"
+      accept="image/*">
+
+
+    <img
+      id="recipePreview"
+      class="recipeimg ${
+        recipe.photo
+          ? ''
+          : 'hidden'
+      }"
+      src="${escapeHTML(recipe.photo || '')}">
+
+
+    <input
+      id="recipePhotoData"
+      type="hidden"
+      value="${escapeHTML(recipe.photo || '')}">
+
+
+    <div class="grid2">
+
+      <div>
+
+        <label>Yield</label>
+
+        <input
+          id="recipeYield"
+          type="number"
+          step="any"
+          value="${escapeHTML(recipe.yield || 1)}">
+
+      </div>
+
+
+      <div>
+
+        <label>Yield Unit</label>
+
+        <input
+          id="recipeYieldUnit"
+          value="${escapeHTML(recipe.yunit || 'portion')}">
+
+      </div>
+
+    </div>
+
+
+    <h3>Ingredients</h3>
+
+    <div id="recipeRows"></div>
+
+
+    <button
+      class="light full"
+      id="addRecipeRow">
+      ➕ Add Ingredient
+    </button>
+
+
+    <h3>Pricing</h3>
+
+
+    <div class="grid2">
+
+      <div>
+
+        <label>Method</label>
+
+        <select id="recipeMode">
+
+          <option
+            value="markup"
+            ${
+              recipe.mode !== 'food'
+                ? 'selected'
+                : ''
+            }>
+            Markup %
+          </option>
+
+          <option
+            value="food"
+            ${
+              recipe.mode === 'food'
+                ? 'selected'
+                : ''
+            }>
+            Target Food Cost %
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div>
+
+        <label id="markupLabel">
+
+          ${
+            recipe.mode === 'food'
+              ? 'Target Food Cost %'
+              : 'Markup %'
+          }
+
+        </label>
+
+        <input
+          id="recipeMarkup"
+          type="number"
+          step="0.1"
+          value="${escapeHTML(
+            recipe.markup ?? 100
+          )}">
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="costBox"
+      class="total">
+    </div>
+
+
+    <label>Instructions</label>
+
+    <textarea id="recipeInstructions">${escapeHTML(
+      recipe.instructions || ''
+    )}</textarea>
+
+
+    <div class="row">
+
+      <button
+        class="light"
+        id="cancelRecipe">
+        Cancel
+      </button>
+
+      <button
+        class="green"
+        id="saveRecipe">
+        Save Recipe
+      </button>
+
+    </div>
+
+  `;
+
+
+  el('recipeFile')
+    .addEventListener(
+      'change',
+      handleRecipePhoto
+    );
+
+
+  el('addRecipeRow')
+    .addEventListener(
+      'click',
+      function(){
+        addRecipeRow();
+      }
+    );
+
+
+  el('recipeMode')
+    .addEventListener(
+      'change',
+      updateRecipeCost
+    );
+
+
+  el('recipeMarkup')
+    .addEventListener(
+      'input',
+      updateRecipeCost
+    );
+
+
+  el('recipeYield')
+    .addEventListener(
+      'input',
+      updateRecipeCost
+    );
+
+
+  el('recipeYieldUnit')
+    .addEventListener(
+      'input',
+      updateRecipeCost
+    );
+
+
+  el('cancelRecipe')
+    .addEventListener(
+      'click',
+      closeRecipeEditor
+    );
+
+
+  el('saveRecipe')
+    .addEventListener(
+      'click',
+      saveRecipe
+    );
+
+
+  (
+    recipe.ingredients || []
+  ).forEach(
+    function(item){
+      addRecipeRow(item);
+    }
+  );
+
+
+  updateRecipeCost();
+
+}
+
+
+function addRecipeRow(item){
+
+  item = item || {
+
+    ingredientId:'',
+
+    qty:'',
+
+    unit:'g'
+
+  };
+
+
+  const row =
+    document.createElement('div');
+
+
+  row.className =
+    'ingrow';
+
+
+  const units = [
+    'g',
+    'kg',
+    'oz',
+    'lb',
+    'ml',
+    'l',
+    'each',
+    'dozen'
+  ];
+
+
+  row.innerHTML = `
+
+    <div>
+
+      <label>Ingredient</label>
+
+      <select class="recipeIngredient">
+
+        <option value="">
+          Choose...
+        </option>
+
+        ${data.ingredients.map(
+          function(ingredient){
+
+            return `
+              <option
+                value="${ingredient.id}"
+                ${
+                  item.ingredientId === ingredient.id
+                    ? 'selected'
+                    : ''
+                }>
+                ${escapeHTML(ingredient.name)}
+              </option>
+            `;
+
+          }
+        ).join('')}
+
+      </select>
+
+    </div>
+
+
+    <div>
+
+      <label>Qty</label>
+
+      <input
+        class="recipeQty"
+        type="number"
+        step="any"
+        value="${escapeHTML(item.qty || '')}">
+
+    </div>
+
+
+    <div>
+
+      <label>Unit</label>
+
+      <select class="recipeUnit">
+
+        ${units.map(
+          function(unit){
+
+            return `
+              <option
+                value="${unit}"
+                ${
+                  item.unit === unit
+                    ? 'selected'
+                    : ''
+                }>
+                ${unit}
+              </option>
+            `;
+
+          }
+        ).join('')}
+
+      </select>
+
+    </div>
+
+
+    <div>
+
+      <label>Cost</label>
+
+      <input
+        class="recipeCost"
+        readonly
+        value="$0.00">
+
+    </div>
+
+
+    <button
+      class="red removeRecipeRow"
+      type="button">
+      ✕
+    </button>
+
+  `;
+
+
+  el('recipeRows')
+    .appendChild(row);
+
+
+  row
+    .querySelector('.recipeIngredient')
+    .addEventListener(
+      'change',
+      updateRecipeCost
+    );
+
+
+  row
+    .querySelector('.recipeQty')
+    .addEventListener(
+      'input',
+      updateRecipeCost
+    );
+
+
+  row
+    .querySelector('.recipeUnit')
+    .addEventListener(
+      'change',
+      updateRecipeCost
+    );
+
+
+  row
+    .querySelector('.removeRecipeRow')
+    .addEventListener(
+      'click',
+      function(){
+
+        row.remove();
+
+        updateRecipeCost();
+
+      }
+    );
+
+
+  updateRecipeCost();
+
+}
+
+
+function collectRecipeIngredients(){
+
+  return Array
+    .from(
+      el('recipeRows')
+        .querySelectorAll('.ingrow')
+    )
+    .map(
+      function(row){
+
+        return {
+
+          ingredientId:
+            row
+              .querySelector(
+                '.recipeIngredient'
+              )
+              .value,
+
+          qty:
+            Number(
+              row
+                .querySelector(
+                  '.recipeQty'
+                )
+                .value
+            ) || 0,
+
+          unit:
+            row
+              .querySelector(
+                '.recipeUnit'
+              )
+              .value
+
+        };
+
+      }
+    )
+    .filter(
+      function(item){
+
+        return (
+          item.ingredientId &&
+          item.qty > 0
+        );
+
+      }
+    );
+
+}
+
+
+function updateRecipeCost(){
+
+  if(!el('recipeRows')){
+    return;
+  }
+
+
+  document
+    .querySelectorAll(
+      '#recipeRows .ingrow'
+    )
+    .forEach(
+      function(row){
+
+        const ingredient =
+          findIngredient(
+            row
+              .querySelector(
+                '.recipeIngredient'
+              )
+              .value
+          );
+
+
+        const cost =
+          getIngredientCost(
+            ingredient,
+
+            Number(
+              row
+                .querySelector(
+                  '.recipeQty'
+                )
+                .value
+            ) || 0,
+
+            row
+              .querySelector(
+                '.recipeUnit'
+              )
+              .value
+          );
+
+
+        row
+          .querySelector(
+            '.recipeCost'
+          )
+          .value =
+            cost === null
+              ? '—'
+              : money(cost);
+
+      }
+    );
+
+
+  const temporaryRecipe = {
+
+    ingredients:
+      collectRecipeIngredients(),
+
+    yield:
+      Number(
+        el('recipeYield').value
+      ) || 1,
+
+    mode:
+      el('recipeMode').value,
+
+    markup:
+      Number(
+        el('recipeMarkup').value
+      ) || 0
+
+  };
+
+
+  const cost =
+    calculateRecipe(
+      temporaryRecipe
+    );
+
+
+  el('markupLabel').textContent =
+    el('recipeMode').value === 'food'
+      ? 'Target Food Cost %'
+      : 'Markup %';
+
+
+  const unit =
+    el('recipeYieldUnit').value ||
+    'portion';
+
+
+  el('costBox').innerHTML = `
+
+    <div>
+
+      <span>
+        Total recipe cost
+      </span>
+
+      <b>
+        ${money(cost.total)}
+      </b>
+
+    </div>
+
+
+    <div>
+
+      <span>
+        Cost / ${escapeHTML(unit)}
+      </span>
+
+      <b>
+        ${money(cost.per)}
+      </b>
+
+    </div>
+
+
+    <div>
+
+      <span>
+        Selling price / ${escapeHTML(unit)}
+      </span>
+
+      <b class="big">
+        ${money(cost.sell)}
+      </b>
+
+    </div>
+
+
+    <div>
+
+      <span>
+        Food cost %
+      </span>
+
+      <b>
+        ${cost.food.toFixed(1)}%
+      </b>
+
+    </div>
+
+
+    ${
+      cost.missing
+        ? `
+          <div class="notice">
+            ${cost.missing}
+            ingredient(s) could not be costed
+            because their units do not match.
+          </div>
+        `
+        : ''
+    }
+
+  `;
+
+}
+
+
+function handleRecipePhoto(event){
+
+  const file =
+    event.target.files[0];
+
+
+  if(!file){
+    return;
+  }
+
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload =
+    function(){
+
+      el('recipePhotoData')
+        .value =
+        reader.result;
+
+
+      el('recipePreview')
+        .src =
+        reader.result;
+
+
+      el('recipePreview')
+        .classList
+        .remove('hidden');
+
+    };
+
+
+  reader.readAsDataURL(file);
+
+}
+
+
+function saveRecipe(){
+
+  const name =
+    el('recipeName')
+      .value
+      .trim();
+
+
+  if(!name){
+
+    alert(
+      'Enter a recipe name.'
+    );
+
+    return;
+
+  }
+
+
+  const recipe = {
+
+    id:
+      editingRecipeId === 'new'
+        ? newId()
+        : editingRecipeId,
+
+    name:name,
+
+    category:
+      el('recipeCategory').value,
+
+    description:
+      el('recipeDescription').value,
+
+    photo:
+      el('recipePhotoData').value,
+
+    yield:
+      Number(
+        el('recipeYield').value
+      ) || 1,
+
+    yunit:
+      el('recipeYieldUnit').value ||
+      'portion',
+
+    mode:
+      el('recipeMode').value,
+
+    markup:
+      Number(
+        el('recipeMarkup').value
+      ) || 0,
+
+    ingredients:
+      collectRecipeIngredients(),
+
+    instructions:
+      el('recipeInstructions').value,
+
+    updated:
+      new Date().toISOString()
+
+  };
+
+
+  const index =
+    data.recipes.findIndex(
+      function(existing){
+        return existing.id === recipe.id;
+      }
+    );
+
+
+  if(index === -1){
+
+    data.recipes.push(recipe);
+
+  }else{
+
+    data.recipes[index] =
+      recipe;
+
+  }
+
+
+  saveData();
+
+  closeRecipeEditor();
+
+  renderHome();
+
+  renderRecipes();
+
+}
+
+
+function closeRecipeEditor(){
+
+  editingRecipeId = null;
+
+
+  el('reditor')
+    .classList
+    .add('hidden');
+
+
+  el('rlistview')
+    .classList
+    .remove('hidden');
+
+}
+
+
+function deleteRecipe(id){
+
+  if(
+    !confirm(
+      'Delete this recipe?'
+    )
+  ){
+    return;
+  }
+
+
+  data.recipes =
+    data.recipes.filter(
+      function(recipe){
+        return recipe.id !== id;
+      }
+    );
+
+
+  saveData();
+
+  renderRecipes();
+
+  renderHome();
+
+}
+
+
+/* =========================
+   INVOICE SCANNER
+========================= */
+
+function renderScanForm(){
+
+  el('scanform').innerHTML = `
+
+    <div class="grid2">
+
+      <div>
+
+        <label>Ingredient *</label>
+
+        <input id="scanName">
+
+      </div>
+
+
+      <div>
+
+        <label>Supplier</label>
+
+        <input id="scanSupplier">
+
+      </div>
+
+    </div>
+
+
+    <div class="grid2">
+
+      <div>
+
+        <label>Quantity *</label>
+
+        <input
+          id="scanQty"
+          type="number"
+          step="any">
+
+      </div>
+
+
+      <div>
+
+        <label>Unit *</label>
+
+        <select id="scanUnit">
+
+          ${
+            [
+              'kg',
+              'g',
+              'lb',
+              'oz',
+              'l',
+              'ml',
+              'each',
+              'dozen'
+            ].map(
+              function(unit){
+
+                return `
+                  <option value="${unit}">
+                    ${unit}
+                  </option>
+                `;
+
+              }
+            ).join('')
+          }
+
+        </select>
+
+      </div>
+
+    </div>
+
+
+    <label>Verified Price *</label>
+
+    <input
+      id="scanPrice"
+      type="number"
+      step="0.01">
+
+
+    <button
+      class="green full"
+      id="saveScan">
+      Save Ingredient Price
+    </button>
+
+  `;
+
+
+  el('saveScan')
+    .addEventListener(
+      'click',
+      saveScannedIngredient
+    );
+
+}
+
+
+function previewInvoice(event){
+
+  const file =
+    event.target.files[0];
+
+
+  if(!file){
+    return;
+  }
+
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload =
+    function(){
+
+      el('ipreview')
+        .src =
+        reader.result;
+
+
+      el('ipreview')
+        .classList
+        .remove('hidden');
+
+
+      el('ocrbtn').disabled =
+        false;
+
+    };
+
+
+  reader.readAsDataURL(file);
+
+}
+
+
+async function readInvoice(){
+
+  const file =
+    el('invoice').files[0];
+
+
+  if(!file){
+    return;
+  }
+
+
+  if(
+    typeof Tesseract ===
+    'undefined'
+  ){
+
+    el('ocrstatus').textContent =
+      'OCR could not load. Enter the invoice manually.';
+
+    return;
+
+  }
+
+
+  el('ocrbtn').disabled =
+    true;
+
+
+  el('ocrstatus').textContent =
+    'Reading invoice...';
+
+
+  try{
+
+    const result =
+      await Tesseract.recognize(
+        file,
+        'eng',
+        {
+          logger:function(message){
+
+            el('ocrstatus')
+              .textContent =
+              message.status ||
+              'Reading...';
+
+          }
+        }
+      );
+
+
+    el('ocrtext').value =
+      result.data.text || '';
+
+
+    el('ocrstatus').textContent =
+      'Done — verify the information before saving.';
+
+
+  }catch(error){
+
+    console.error(error);
+
+    el('ocrstatus').textContent =
+      'Could not read invoice. Enter the information manually.';
+
+  }
+
+
+  el('ocrbtn').disabled =
+    false;
+
+}
+
+
+function saveScannedIngredient(){
+
+  const name =
+    el('scanName')
+      .value
+      .trim();
+
+
+  const quantity =
+    Number(
+      el('scanQty').value
+    );
+
+
+  const price =
+    Number(
+      el('scanPrice').value
+    );
+
+
+  if(
+    !name ||
+    !Number.isFinite(quantity) ||
+    quantity <= 0 ||
+    !Number.isFinite(price) ||
+    price < 0
+  ){
+
+    alert(
+      'Enter ingredient, quantity and verified price.'
+    );
+
+    return;
+
+  }
+
+
+  data.ingredients.push({
+
+    id:newId(),
+
+    name:name,
+
+    category:'',
+
+    supplier:
+      el('scanSupplier')
+        .value
+        .trim(),
+
+    qty:quantity,
+
+    unit:
+      el('scanUnit').value,
+
+    price:price,
+
+    date:
+      new Date()
+        .toISOString()
+        .slice(0,10),
+
+    notes:
+      'Invoice photo/OCR entry'
+
+  });
+
+
+  saveData();
+
+
+  el('scanName').value = '';
+
+  el('scanSupplier').value = '';
+
+  el('scanQty').value = '';
+
+  el('scanPrice').value = '';
+
+
+  renderHome();
+
+  renderIngredients();
+
+  renderRecipes();
+
+
+  alert(
+    'Ingredient saved.'
+  );
+
+}
+
+
+/* =========================
+   BACKUP
+========================= */
+
+function exportBackup(){
+
+  const backup = {
+
+    version:1,
+
+    exported:
+      new Date().toISOString(),
+
+    ingredients:
+      data.ingredients,
+
+    recipes:
+      data.recipes
+
+  };
+
+
+  const blob =
+    new Blob(
+      [
+        JSON.stringify(
+          backup,
+          null,
+          2
+        )
+      ],
+      {
+        type:'application/json'
+      }
+    );
+
+
+  const url =
+    URL.createObjectURL(blob);
+
+
+  const link =
+    document.createElement('a');
+
+
+  link.href = url;
+
+  link.download =
+    'kitchen-costing-backup.json';
+
+
+  document.body.appendChild(link);
+
+  link.click();
+
+  link.remove();
+
+
+  setTimeout(
+    function(){
+
+      URL.revokeObjectURL(url);
+
+    },
+    500
+  );
+
+}
+
+
+function importBackup(event){
+
+  const file =
+    event.target.files[0];
+
+
+  if(!file){
+    return;
+  }
+
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload =
+    function(){
+
+      try{
+
+        const imported =
+          JSON.parse(
+            reader.result
+          );
+
+
+        if(
+          !Array.isArray(
+            imported.ingredients
+          ) ||
+          !Array.isArray(
+            imported.recipes
+          )
+        ){
+
+          throw new Error(
+            'Invalid backup'
+          );
+
+        }
+
+
+        data = {
+
+          ingredients:
+            imported.ingredients,
+
+          recipes:
+            imported.recipes
+
+        };
+
+
+        saveData();
+
+        renderHome();
+
+        renderIngredients();
+
+        renderRecipes();
+
+
+        alert(
+          'Backup imported successfully.'
+        );
+
+
+      }catch(error){
+
+        console.error(error);
+
+        alert(
+          'This is not a valid Kitchen Costing backup.'
+        );
+
+      }
+
+    };
+
+
+  reader.readAsText(file);
+
+  event.target.value = '';
+
+}
+
+
+function deleteAllData(){
+
+  if(
+    !confirm(
+      'Delete ALL recipes and ingredients? This cannot be undone unless you have a backup.'
+    )
+  ){
+
+    return;
+
+  }
+
+
+  data = {
+
+    ingredients:[],
+
+    recipes:[]
+
+  };
+
+
+  saveData();
+
+  renderHome();
+
+  renderIngredients();
+
+  renderRecipes();
+
+
+  alert(
+    'All data has been deleted.'
+  );
+
+}
+
+
+/* =========================
+   EVENTS
+========================= */
+
+function setupEvents(){
+
+  /* Navigation */
+
+  el('nh')
+    .addEventListener(
+      'click',
+      function(){
+        showPage('home');
+      }
+    );
+
+
+  el('niav')
+    .addEventListener(
+      'click',
+      function(){
+        showPage('ingredients');
+      }
+    );
+
+
+  el('nrav')
+    .addEventListener(
+      'click',
+      function(){
+        showPage('recipes');
+      }
+    );
+
+
+  el('nsc')
+    .addEventListener(
+      'click',
+      function(){
+        showPage('scan');
+      }
+    );
+
+
+  el('nset')
+    .addEventListener(
+      'click',
+      function(){
+        showPage('settings');
+      }
+    );
+
+
+  /* Quick actions */
+
+  el('quickIngredient')
+    .addEventListener(
+      'click',
+      function(){
+
+        showPage('ingredients');
+
+        openIngredientForm();
+
+      }
+    );
+
+
+  el('quickRecipe')
+    .addEventListener(
+      'click',
+      function(){
+
+        showPage('recipes');
+
+        newRecipe();
+
+      }
+    );
+
+
+  el('quickScan')
+    .addEventListener(
+      'click',
+      function(){
+        showPage('scan');
+      }
+    );
+
+
+  el('quickSettings')
+    .addEventListener(
+      'click',
+      function(){
+        showPage('settings');
+      }
+    );
+
+
+  /* Ingredients */
+
+  el('addIngredientBtn')
+    .addEventListener(
+      'click',
+      function(){
+        openIngredientForm();
+      }
+    );
+
+
+  el('isearch')
+    .addEventListener(
+      'input',
+      renderIngredients
+    );
+
+
+  /* Recipes */
+
+  el('newRecipeBtn')
+    .addEventListener(
+      'click',
+      newRecipe
+    );
+
+
+  el('rsearch')
+    .addEventListener(
+      'input',
+      renderRecipes
+    );
+
+
+  document
+    .querySelectorAll('.filterBtn')
+    .forEach(
+      function(button){
+
+        button.addEventListener(
+          'click',
+          function(){
+
+            currentFilter =
+              button.dataset.filter;
+
+            renderRecipes();
+
+          }
+        );
+
+      }
+    );
+
+
+  /* Invoice */
+
+  el('invoice')
+    .addEventListener(
+      'change',
+      previewInvoice
+    );
+
+
+  el('ocrbtn')
+    .addEventListener(
+      'click',
+      readInvoice
+    );
+
+
+  /* Settings */
+
+  el('exportBtn')
+    .addEventListener(
+      'click',
+      exportBackup
+    );
+
+
+  el('importFile')
+    .addEventListener(
+      'change',
+      importBackup
+    );
+
+
+  el('clearBtn')
+    .addEventListener(
+      'click',
+      deleteAllData
+    );
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+function startApp(){
+
+  setupEvents();
+
+  renderHome();
+
+  renderIngredients();
+
+  renderRecipes();
+
+  renderScanForm();
+
+
+  /*
+    Register service worker.
+    The updated sw.js should use
+    a new cache version.
+  */
+
+  if(
+    'serviceWorker' in navigator
+  ){
+
+    navigator.serviceWorker
+      .register('./sw.js')
+      .catch(
+        function(error){
+
+          console.log(
+            'Service worker registration failed:',
+            error
+          );
+
+        }
+      );
+
+  }
+
+}
+
+
+if(
+  document.readyState ===
+  'loading'
+){
+
+  document.addEventListener(
+    'DOMContentLoaded',
+    startApp
+  );
+
+}else{
+
+  startApp();
+
+}
+
+</script>
+
+</body>
+</html>
