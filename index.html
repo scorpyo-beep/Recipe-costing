@@ -1,14 +1,18 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               user-scalable=no,
+               viewport-fit=cover">
 
 <meta name="theme-color" content="#07558a">
-<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Kitchen Costing">
 
 <link rel="manifest" href="./manifest.json">
@@ -16,18 +20,40 @@ content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,vie
 <title>Kitchen Costing</title>
 
 <style>
+
 *{
   box-sizing:border-box;
   -webkit-tap-highlight-color:transparent;
 }
 
-body{
+html,body{
   margin:0;
-  background:#eef4f8;
-  color:#17212b;
-  font-family:Arial,sans-serif;
-  padding-bottom:80px;
+  padding:0;
+  background:#f4f7f9;
+  color:#202832;
+  font-family:Arial,Helvetica,sans-serif;
 }
+
+body{
+  padding-bottom:90px;
+}
+
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* HEADER */
 
 header{
   position:sticky;
@@ -35,606 +61,1203 @@ header{
   z-index:20;
   background:#07558a;
   color:white;
-  padding:14px;
-  padding-top:calc(12px + env(safe-area-inset-top));
-  box-shadow:0 2px 8px #0003;
+  padding:18px 18px 20px;
+  box-shadow:0 2px 8px rgba(0,0,0,.18);
 }
 
 header h1{
   margin:0;
-  font-size:21px;
+  font-size:29px;
+  line-height:1.15;
 }
 
-header small{
-  opacity:.8;
+header p{
+  margin:8px 0 0;
+  font-size:17px;
+  color:#dbeaf4;
 }
+
+/* MAIN */
 
 main{
   max-width:760px;
-  margin:auto;
-  padding:12px;
+  margin:0 auto;
+  padding:16px;
 }
 
-.hidden{
-  display:none!important;
+.page{
+  display:none;
 }
 
-.card,
-.item{
-  background:white;
-  border:1px solid #d8e1e7;
+.page.active{
+  display:block;
+}
+
+/* CARDS */
+
+.card{
+  background:#fff;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:15px;
+  box-shadow:0 1px 5px rgba(0,0,0,.10);
+}
+
+.card h2,
+.card h3{
+  margin:0 0 14px;
+}
+
+.muted{
+  color:#68747d;
+}
+
+.small{
+  font-size:13px;
+}
+
+/* BUTTONS */
+
+.btn{
+  border:0;
   border-radius:13px;
-  padding:13px;
-  margin-bottom:11px;
-  box-shadow:0 1px 3px #0001;
+  padding:13px 16px;
+  font-weight:700;
+  background:#07558a;
+  color:#fff;
+  min-height:48px;
 }
 
-h2{
-  font-size:18px;
-  margin:0 0 11px;
+.btn.secondary{
+  background:#e8f0f5;
+  color:#07558a;
 }
 
-h3{
-  font-size:15px;
-  margin-top:18px;
+.btn.success{
+  background:#2f8f57;
+  color:#fff;
 }
+
+.btn.danger{
+  background:#c92d32;
+  color:#fff;
+}
+
+.btn.light{
+  background:#f0f3f5;
+  color:#28343d;
+}
+
+.btn.full{
+  width:100%;
+}
+
+.action-row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.action-row .btn{
+  flex:1;
+  min-width:130px;
+}
+
+/* INPUTS */
 
 label{
   display:block;
-  font-size:12px;
-  font-weight:bold;
-  margin:8px 0 4px;
+  font-weight:700;
+  font-size:14px;
+  margin:0 0 7px;
 }
 
 input,
 select,
 textarea{
   width:100%;
-  padding:10px;
-  border:1px solid #bdccd5;
-  border-radius:8px;
-  font-size:16px;
-  background:white;
-  color:#17212b;
+  border:2px solid #cbd5dc;
+  border-radius:14px;
+  padding:13px 14px;
+  background:#fff;
+  color:#202832;
+  outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:#07558a;
 }
 
 textarea{
-  min-height:85px;
+  min-height:95px;
   resize:vertical;
 }
 
-button{
-  border:0;
-  border-radius:9px;
-  padding:11px;
-  font-weight:bold;
-  font-size:14px;
-  touch-action:manipulation;
-}
-
-button:active{
-  transform:scale(.98);
-}
-
-.blue{
-  background:#07558a;
-  color:white;
-}
-
-.green{
-  background:#238636;
-  color:white;
-}
-
-.red{
-  background:#c62828;
-  color:white;
-}
-
-.orange{
-  background:#df7b18;
-  color:white;
-}
-
-.light{
-  background:#e8f0f5;
-  color:#07558a;
-}
-
-.full{
-  width:100%;
-  margin-top:8px;
-}
+/* GRIDS */
 
 .grid2{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:8px;
+  gap:12px;
 }
 
-.stats{
+.grid3{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+}
+
+/* DASHBOARD */
+
+.stat-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
 }
 
 .stat{
-  background:#f5f8fa;
-  border:1px solid #d8e1e7;
-  border-radius:10px;
-  padding:11px;
+  background:#eef5f8;
+  border-radius:14px;
+  padding:14px;
+  text-align:center;
 }
 
-.stat b{
+.stat strong{
   display:block;
-  font-size:23px;
+  font-size:25px;
   color:#07558a;
 }
 
-.muted{
-  color:#687782;
-  font-size:12px;
+.stat span{
+  font-size:13px;
+  color:#68747d;
 }
 
-.chips{
-  display:flex;
-  gap:5px;
-  flex-wrap:wrap;
-  margin:7px 0;
+/* RECIPES */
+
+.recipe-card{
+  border:1px solid #dce3e8;
+  border-radius:15px;
+  padding:14px;
+  margin-bottom:12px;
+  background:#fff;
 }
 
-.chip{
-  background:#e8f0f5;
-  border-radius:99px;
-  padding:5px 8px;
-  font-size:10px;
-  font-weight:bold;
+.recipe-card h3{
+  margin:0 0 5px;
 }
 
-.price{
-  color:#238636;
-  font-weight:bold;
+.recipe-meta{
+  font-size:13px;
+  color:#68747d;
+  margin-bottom:10px;
 }
 
-.itemtop{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-}
-
-.empty{
-  text-align:center;
-  color:#687782;
-  padding:25px;
-}
-
-.row{
+.recipe-actions{
   display:flex;
   gap:8px;
-  margin-top:8px;
 }
 
-.row button{
+.recipe-actions button{
   flex:1;
 }
 
+.photo{
+  width:100%;
+  max-height:220px;
+  object-fit:cover;
+  border-radius:14px;
+  margin-bottom:12px;
+}
+
+.preview-img{
+  width:100%;
+  max-height:240px;
+  object-fit:cover;
+  border-radius:14px;
+  margin-top:10px;
+}
+
+/* CATEGORY BUTTONS */
+
+.category-row{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:2px 0 12px;
+  scrollbar-width:none;
+}
+
+.category-row::-webkit-scrollbar{
+  display:none;
+}
+
+.category-btn{
+  flex:0 0 auto;
+  border:0;
+  border-radius:999px;
+  background:#e8f0f5;
+  color:#07558a;
+  padding:10px 14px;
+  font-weight:700;
+}
+
+.category-btn.active{
+  background:#07558a;
+  color:#fff;
+}
+
+/* RECIPE INGREDIENTS */
+
+.ingredient-row{
+  border:1px solid #dce3e8;
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:12px;
+  background:#fafcfd;
+}
+
+.ingredient-row-head{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 70px 100px 85px 52px;
+  gap:8px;
+  align-items:end;
+}
+
+.ingredient-row-head label{
+  font-size:12px;
+}
+
+.cost-box{
+  min-height:48px;
+  border:2px solid #cbd5dc;
+  border-radius:12px;
+  padding:12px 8px;
+  background:#f6f8f9;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:15px;
+}
+
+.remove-row{
+  border:0;
+  background:#c92d32;
+  color:#fff;
+  border-radius:12px;
+  min-height:48px;
+  font-size:27px;
+}
+
+.add-ingredient{
+  width:100%;
+  border:0;
+  border-radius:14px;
+  padding:14px;
+  background:#e8f0f5;
+  color:#07558a;
+  font-weight:700;
+  font-size:18px;
+}
+
+/* PRICING */
+
+.total-box{
+  background:#eef8f1;
+  border:2px solid #b8dfc5;
+  border-radius:16px;
+  padding:16px;
+  margin-top:15px;
+}
+
+.total-line{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  padding:6px 0;
+  font-size:17px;
+}
+
+.total-line.big{
+  font-size:21px;
+  font-weight:700;
+}
+
+/* OTHER */
+
+.empty{
+  text-align:center;
+  padding:28px 15px;
+  color:#68747d;
+}
+
+.notice{
+  background:#fff7df;
+  border:1px solid #ead28a;
+  border-radius:13px;
+  padding:12px;
+  margin-top:10px;
+}
+
+.ocr-box{
+  min-height:180px;
+  background:#f7f9fa;
+  border:2px dashed #cbd5dc;
+  border-radius:14px;
+  padding:12px;
+  white-space:pre-wrap;
+}
+
+/* BOTTOM NAV */
+
 nav{
   position:fixed;
-  bottom:0;
   left:0;
   right:0;
-  background:white;
-  border-top:1px solid #d8e1e7;
+  bottom:0;
+  z-index:30;
+  background:#fff;
+  border-top:1px solid #d4dce1;
   display:grid;
   grid-template-columns:repeat(5,1fr);
-  z-index:50;
   padding-bottom:env(safe-area-inset-bottom);
 }
 
 nav button{
-  background:white;
-  color:#65737c;
-  font-size:10px;
-  padding:8px 2px;
+  border:0;
+  background:#fff;
+  color:#68747d;
+  padding:9px 3px 8px;
+  font-weight:700;
+  font-size:12px;
 }
 
 nav button.active{
   color:#07558a;
 }
 
-nav span{
+nav .icon{
   display:block;
-  font-size:20px;
+  font-size:25px;
+  line-height:28px;
 }
 
-.recipeimg{
-  width:100%;
-  max-height:230px;
-  object-fit:cover;
-  border-radius:10px;
-  margin-top:5px;
-}
+/* MOBILE */
 
-.ingrow{
-  display:grid;
-  grid-template-columns:1.4fr .6fr .65fr 65px 35px;
-  gap:4px;
-  align-items:end;
-  margin-bottom:7px;
-}
+@media(max-width:600px){
 
-.ingrow input,
-.ingrow select{
-  font-size:13px;
-  padding:8px;
-}
+  main{
+    padding:12px;
+  }
 
-.total{
-  background:#edf7f0;
-  border:1px solid #b9ddc5;
-  border-radius:10px;
-  padding:11px;
-  margin-top:8px;
-}
+  .grid3{
+    grid-template-columns:1fr 1fr;
+  }
 
-.total div{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  margin:4px 0;
-}
+  .ingredient-row-head{
+    grid-template-columns:minmax(0,1fr) 72px 92px 82px 48px;
+  }
 
-.big{
-  font-size:20px;
-  font-weight:900;
-}
+  .ingredient-row-head input,
+  .ingredient-row-head select{
+    padding:11px 8px;
+  }
 
-.notice{
-  background:#fff7e8;
-  border:1px solid #efd28f;
-  padding:9px;
-  border-radius:8px;
-  font-size:11px;
-  margin-top:8px;
-}
+  .cost-box{
+    padding:10px 5px;
+    font-size:13px;
+  }
 
-#ocrtext{
-  min-height:130px;
+  .remove-row{
+    font-size:24px;
+  }
 }
 
 @media(max-width:390px){
 
-  main{
-    padding:8px;
+  header h1{
+    font-size:26px;
   }
 
-  .ingrow{
-    grid-template-columns:1.3fr .55fr .6fr 58px 32px;
+  header p{
+    font-size:15px;
   }
 
-  .ingrow label{
-    font-size:9px;
+  .ingredient-row-head{
+    grid-template-columns:minmax(0,1fr) 64px 82px 72px 44px;
   }
 }
+
 </style>
 </head>
 
 <body>
 
 <header>
+
   <h1>🍳 Kitchen Costing</h1>
-  <small>Recipes • Ingredients • Food Cost • Pricing</small>
+
+  <p>
+    Recipes • Ingredients • Food Cost • Pricing
+  </p>
+
 </header>
 
 <main>
 
-<!-- HOME -->
+<!-- =====================================================
+     HOME
+===================================================== -->
 
-<section id="home">
+<section id="homePage" class="page active">
 
   <div class="card">
-    <h2>Dashboard</h2>
 
-    <div class="stats">
+    <h2>Kitchen Dashboard</h2>
 
-      <div class="stat">
-        <b id="nr">0</b>
-        <span>Recipes</span>
-      </div>
+    <div class="stat-grid">
 
       <div class="stat">
-        <b id="ni">0</b>
+        <strong id="homeIngredientCount">0</strong>
         <span>Ingredients</span>
       </div>
 
       <div class="stat">
-        <b id="nc">0</b>
-        <span>Categories Used</span>
+        <strong id="homeRecipeCount">0</strong>
+        <span>Recipes</span>
       </div>
 
       <div class="stat">
-        <b id="nf">0%</b>
-        <span>Average Food Cost</span>
+        <strong>8</strong>
+        <span>Categories</span>
       </div>
 
     </div>
+
   </div>
+
 
   <div class="card">
 
     <h2>Quick Actions</h2>
 
-    <div class="grid2">
+    <div class="action-row">
 
-      <button class="blue" id="quickIngredient">
-        ➕ Ingredient
+      <button
+        class="btn"
+        id="homeNewIngredient">
+        + Ingredient
       </button>
 
-      <button class="green" id="quickRecipe">
-        📖 Recipe
+      <button
+        class="btn"
+        id="homeNewRecipe">
+        + Recipe
       </button>
 
-      <button class="orange" id="quickScan">
-        📸 Invoice
+    </div>
+
+    <div
+      class="action-row"
+      style="margin-top:10px">
+
+      <button
+        class="btn secondary"
+        id="homeInvoice">
+        📷 Invoice
       </button>
 
-      <button class="light" id="quickSettings">
-        ⚙️ Settings
+      <button
+        class="btn secondary"
+        id="homeBackup">
+        💾 Backup
       </button>
 
     </div>
 
   </div>
+
 
   <div class="card">
 
     <h2>Recent Recipes</h2>
 
-    <div id="recent"></div>
+    <div id="homeRecipes"></div>
 
   </div>
 
 </section>
 
 
-<!-- INGREDIENTS -->
+<!-- =====================================================
+     INGREDIENTS
+===================================================== -->
 
-<section id="ingredients" class="hidden">
+<section
+  id="ingredientsPage"
+  class="page">
+
+  <div class="card">
+
+    <button
+      class="btn full"
+      id="newIngredientBtn">
+      + Add Ingredient
+    </button>
+
+  </div>
+
+
+  <!-- INGREDIENT FORM -->
+
+  <div
+    id="ingredientFormCard"
+    class="card hidden">
+
+    <h2 id="ingredientFormTitle">
+      Add Ingredient
+    </h2>
+
+
+    <div class="grid2">
+
+      <div>
+
+        <label for="ingredientName">
+          Ingredient name
+        </label>
+
+        <input
+          id="ingredientName"
+          placeholder="Example: Olive oil">
+
+      </div>
+
+
+      <div>
+
+        <label for="ingredientCategory">
+          Category
+        </label>
+
+        <input
+          id="ingredientCategory"
+          placeholder="Example: Oils">
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="grid2"
+      style="margin-top:12px">
+
+      <div>
+
+        <label for="ingredientSupplier">
+          Supplier
+        </label>
+
+        <input
+          id="ingredientSupplier"
+          placeholder="Supplier">
+
+      </div>
+
+
+      <div>
+
+        <label for="ingredientDate">
+          Purchase date
+        </label>
+
+        <input
+          id="ingredientDate"
+          type="date">
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="grid3"
+      style="margin-top:12px">
+
+      <div>
+
+        <label for="ingredientQty">
+          Purchase quantity
+        </label>
+
+        <input
+          id="ingredientQty"
+          type="number"
+          min="0"
+          step="0.001"
+          placeholder="1">
+
+      </div>
+
+
+      <div>
+
+        <label for="ingredientUnit">
+          Purchase unit
+        </label>
+
+        <select id="ingredientUnit"></select>
+
+      </div>
+
+
+      <div>
+
+        <label for="ingredientPrice">
+          Purchase price
+        </label>
+
+        <input
+          id="ingredientPrice"
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="0.00">
+
+      </div>
+
+    </div>
+
+
+    <div style="margin-top:12px">
+
+      <label for="ingredientNotes">
+        Notes
+      </label>
+
+      <textarea
+        id="ingredientNotes"
+        placeholder="Package size, brand, etc."></textarea>
+
+    </div>
+
+
+    <div
+      class="action-row"
+      style="margin-top:12px">
+
+      <button
+        class="btn success"
+        id="saveIngredientBtn">
+        Save Ingredient
+      </button>
+
+      <button
+        class="btn light"
+        id="cancelIngredientBtn">
+        Cancel
+      </button>
+
+    </div>
+
+  </div>
+
 
   <div class="card">
 
     <h2>Ingredient Price Log</h2>
 
-    <input
-      id="isearch"
-      placeholder="Search ingredients..."
-    >
-
-    <button
-      class="blue full"
-      id="addIngredientBtn">
-      ➕ Add Ingredient
-    </button>
+    <div id="ingredientList"></div>
 
   </div>
-
-  <div
-    id="iform"
-    class="card hidden">
-  </div>
-
-  <div id="ilist"></div>
 
 </section>
 
 
-<!-- RECIPES -->
+<!-- =====================================================
+     RECIPES
+===================================================== -->
 
-<section id="recipes" class="hidden">
+<section
+  id="recipesPage"
+  class="page">
 
-  <div id="rlistview">
+
+  <!-- RECIPE LIST -->
+
+  <div id="recipeListView">
 
     <div class="card">
 
-      <h2>📖 Recipe Book</h2>
-
-      <input
-        id="rsearch"
-        placeholder="Search recipes..."
-      >
-
-      <div
-        class="grid2"
-        style="margin-top:8px">
-
-        <button
-          class="light filterBtn"
-          data-filter="All">
-          📚 All
-        </button>
-
-        <button
-          class="light filterBtn"
-          data-filter="Soups">
-          🍲 Soups
-        </button>
-
-        <button
-          class="light filterBtn"
-          data-filter="Sauces">
-          🥣 Sauces
-        </button>
-
-        <button
-          class="light filterBtn"
-          data-filter="Beef">
-          🥩 Beef
-        </button>
-
-        <button
-          class="light filterBtn"
-          data-filter="Chicken">
-          🍗 Chicken
-        </button>
-
-        <button
-          class="light filterBtn"
-          data-filter="Seafood">
-          🐟 Seafood
-        </button>
-
-        <button
-          class="light filterBtn"
-          data-filter="Vegetarian">
-          🥦 Vegetarian
-        </button>
-
-        <button
-          class="light filterBtn"
-          data-filter="Baked">
-          🥖 Baked
-        </button>
-
-        <button
-          class="light filterBtn"
-          data-filter="Desserts">
-          🍰 Desserts
-        </button>
-
-      </div>
-
       <button
-        class="green full"
+        class="btn full"
         id="newRecipeBtn">
-        ➕ New Recipe
+        + New Recipe
       </button>
 
     </div>
 
-    <div id="rlist"></div>
+
+    <div
+      class="category-row"
+      id="categoryButtons">
+    </div>
+
+
+    <div class="card">
+
+      <div id="recipeList"></div>
+
+    </div>
 
   </div>
 
+
+  <!-- RECIPE EDITOR -->
+
   <div
-    id="reditor"
-    class="card hidden">
+    id="recipeEditorView"
+    class="hidden">
+
+
+    <div class="card">
+
+      <div class="action-row">
+
+        <button
+          class="btn secondary"
+          id="backToRecipesBtn">
+          ← Back
+        </button>
+
+        <button
+          class="btn success"
+          id="saveRecipeBtn">
+          Save Recipe
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2 id="recipeFormTitle">
+        New Recipe
+      </h2>
+
+
+      <div>
+
+        <label for="recipeName">
+          Recipe name
+        </label>
+
+        <input
+          id="recipeName"
+          placeholder="Example: Honey Garlic Salmon">
+
+      </div>
+
+
+      <div
+        class="grid2"
+        style="margin-top:12px">
+
+        <div>
+
+          <label for="recipeCategory">
+            Category
+          </label>
+
+          <select id="recipeCategory"></select>
+
+        </div>
+
+
+        <div>
+
+          <label for="recipePhoto">
+            Recipe photo
+          </label>
+
+          <input
+            id="recipePhoto"
+            type="file"
+            accept="image/*">
+
+        </div>
+
+      </div>
+
+
+      <img
+        id="recipePhotoPreview"
+        class="preview-img hidden">
+
+
+      <div style="margin-top:12px">
+
+        <label for="recipeDescription">
+          Description
+        </label>
+
+        <textarea
+          id="recipeDescription"
+          placeholder="Describe the dish"></textarea>
+
+      </div>
+
+
+      <div
+        class="grid2"
+        style="margin-top:12px">
+
+        <div>
+
+          <label for="recipeYield">
+            Yield
+          </label>
+
+          <input
+            id="recipeYield"
+            type="number"
+            min="0.001"
+            step="0.001"
+            value="1">
+
+        </div>
+
+
+        <div>
+
+          <label for="recipeYieldUnit">
+            Yield unit
+          </label>
+
+          <input
+            id="recipeYieldUnit"
+            value="portion">
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- RECIPE INGREDIENTS -->
+
+    <div class="card">
+
+      <h2>Ingredients</h2>
+
+      <div
+        class="small muted"
+        style="margin-bottom:12px">
+
+        Each ingredient is automatically costed from
+        the purchase price in your Ingredient Price Log.
+
+      </div>
+
+
+      <div id="recipeIngredients"></div>
+
+
+      <button
+        type="button"
+        class="add-ingredient"
+        id="addRecipeIngredientBtn">
+
+        ＋ Add Ingredient
+
+      </button>
+
+    </div>
+
+
+    <!-- PRICING -->
+
+    <div class="card">
+
+      <h2>Pricing</h2>
+
+
+      <div class="grid2">
+
+        <div>
+
+          <label for="pricingMethod">
+            Method
+          </label>
+
+          <select id="pricingMethod">
+
+            <option value="markup">
+              Markup %
+            </option>
+
+            <option value="foodcost">
+              Target Food Cost %
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div>
+
+          <label
+            id="pricingValueLabel"
+            for="pricingValue">
+
+            Markup %
+
+          </label>
+
+          <input
+            id="pricingValue"
+            type="number"
+            min="0.01"
+            step="0.1"
+            value="100">
+
+        </div>
+
+      </div>
+
+
+      <div class="total-box">
+
+        <div class="total-line">
+
+          <span>
+            Total recipe cost
+          </span>
+
+          <strong id="recipeTotalCost">
+            $0.00
+          </strong>
+
+        </div>
+
+
+        <div class="total-line">
+
+          <span>
+            Cost per portion
+          </span>
+
+          <strong id="recipePortionCost">
+            $0.00
+          </strong>
+
+        </div>
+
+
+        <div class="total-line big">
+
+          <span>
+            Selling price / portion
+          </span>
+
+          <strong id="recipeSellingPrice">
+            $0.00
+          </strong>
+
+        </div>
+
+
+        <div class="total-line">
+
+          <span>
+            Food cost %
+          </span>
+
+          <strong id="recipeFoodCostPercent">
+            0.0%
+          </strong>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- INSTRUCTIONS -->
+
+    <div class="card">
+
+      <h2>Instructions</h2>
+
+      <textarea
+        id="recipeInstructions"
+        placeholder="Cooking / preparation instructions"></textarea>
+
+    </div>
+
   </div>
 
 </section>
 
 
-<!-- INVOICE -->
+<!-- =====================================================
+     INVOICE
+===================================================== -->
 
-<section id="scan" class="hidden">
+<section
+  id="invoicePage"
+  class="page">
 
   <div class="card">
 
-    <h2>📸 Invoice Scanner</h2>
+    <h2>Invoice Scanner</h2>
 
     <p class="muted">
-      Take a supplier invoice photo.
-      OCR will read the text and you can verify
-      the information before saving it.
+
+      Take a photo of an invoice or upload one.
+      OCR will read the invoice so you can verify
+      ingredient prices before adding them to your price log.
+
     </p>
 
+
     <input
-      id="invoice"
+      id="invoicePhoto"
       type="file"
       accept="image/*"
       capture="environment">
 
-    <img
-      id="ipreview"
-      class="recipeimg hidden">
-
-    <button
-      id="ocrbtn"
-      class="orange full"
-      disabled>
-      🔎 Read Invoice
-    </button>
 
     <div
-      id="ocrstatus"
-      class="muted">
+      id="ocrProgress"
+      class="notice hidden">
     </div>
 
-    <textarea
-      id="ocrtext"
-      placeholder="Recognized invoice text will appear here...">
-    </textarea>
 
-  </div>
+    <div style="margin-top:12px">
+
+      <label>
+        OCR text
+      </label>
+
+      <div
+        id="ocrText"
+        class="ocr-box">
+
+        No invoice scanned yet.
+
+      </div>
+
+    </div>
 
 
-  <div class="card">
+    <div class="notice">
 
-    <h2>Verified Invoice Entry</h2>
+      Always verify OCR results against the invoice.
+      OCR can misread numbers, units and decimal points.
 
-    <div id="scanform"></div>
+    </div>
+
+
+    <button
+      class="btn full"
+      id="scanInvoiceBtn"
+      style="margin-top:12px">
+
+      📷 Scan Invoice
+
+    </button>
 
   </div>
 
 </section>
 
 
-<!-- SETTINGS -->
+<!-- =====================================================
+     SETTINGS
+===================================================== -->
 
-<section id="settings" class="hidden">
+<section
+  id="settingsPage"
+  class="page">
+
 
   <div class="card">
 
-    <h2>⚙️ Backup & Data</h2>
+    <h2>Backup & Restore</h2>
 
     <p class="muted">
-      Your recipes and ingredient prices are stored
-      on this device. Export a backup before
-      changing phones.
+
+      Export your ingredients and recipes so you can
+      move them to another phone or keep a backup.
+
     </p>
 
+
+    <div class="action-row">
+
+      <button
+        class="btn"
+        id="exportBtn">
+
+        Export Backup
+
+      </button>
+
+
+      <button
+        class="btn secondary"
+        id="importBtn">
+
+        Import Backup
+
+      </button>
+
+    </div>
+
+
+    <input
+      id="importFile"
+      type="file"
+      accept=".json,application/json"
+      class="hidden">
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>Data</h2>
+
     <button
-      class="blue full"
-      id="exportBtn">
-      ⬇ Export Backup
-    </button>
+      class="btn danger full"
+      id="deleteAllBtn">
 
-    <label
-      class="light full"
-      style="text-align:center;cursor:pointer">
+      Delete All Data
 
-      ⬆ Import Backup
-
-      <input
-        id="importFile"
-        type="file"
-        accept=".json"
-        style="display:none">
-
-    </label>
-
-    <button
-      class="red full"
-      id="clearBtn">
-      🗑 Delete All Data
     </button>
 
   </div>
 
+
   <div class="card">
 
-    <h2>Pricing</h2>
+    <h2>Kitchen Costing</h2>
 
-    <div class="notice">
+    <p class="small muted">
 
-      <b>Markup:</b><br>
-      $5 cost + 100% markup = $10 selling price.
+      Local version • Your data is stored on this device.
 
-      <br><br>
-
-      <b>Target food cost:</b><br>
-      $5 cost at 25% food cost = $20 selling price.
-
-    </div>
+    </p>
 
   </div>
 
@@ -643,43 +1266,49 @@ nav span{
 </main>
 
 
-<!-- BOTTOM NAV -->
+<!-- =====================================================
+     BOTTOM NAVIGATION
+===================================================== -->
 
 <nav>
 
   <button
-    id="nh"
+    id="navHome"
     class="active">
 
-    <span>🏠</span>
+    <span class="icon">🏠</span>
     Home
 
   </button>
 
-  <button id="niav">
 
-    <span>🥕</span>
+  <button id="navIngredients">
+
+    <span class="icon">🥕</span>
     Ingredients
 
   </button>
 
-  <button id="nrav">
 
-    <span>📖</span>
+  <button id="navRecipes">
+
+    <span class="icon">📖</span>
     Recipes
 
   </button>
 
-  <button id="nsc">
 
-    <span>📸</span>
+  <button id="navInvoice">
+
+    <span class="icon">📸</span>
     Invoice
 
   </button>
 
-  <button id="nset">
 
-    <span>⚙️</span>
+  <button id="navSettings">
+
+    <span class="icon">⚙️</span>
     Settings
 
   </button>
@@ -687,7 +1316,7 @@ nav span{
 </nav>
 
 
-<!-- OCR LIBRARY -->
+<!-- OCR -->
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
@@ -697,14 +1326,15 @@ nav span{
 'use strict';
 
 
-/* =========================
+/* =========================================================
    DATA
-========================= */
+========================================================= */
 
-const STORAGE_KEY =
-  'kitchen_costing_v1';
+const STORAGE_KEY = 'kitchen_costing_v1';
+
 
 const CATEGORIES = [
+
   'Soups',
   'Sauces',
   'Beef',
@@ -713,56 +1343,142 @@ const CATEGORIES = [
   'Vegetarian',
   'Baked',
   'Desserts'
+
 ];
+
+
+const UNITS = [
+
+  'g',
+  'kg',
+  'oz',
+  'lb',
+
+  'ml',
+  'L',
+  'fl oz',
+
+  'each',
+  'dozen'
+
+];
+
 
 let data = loadData();
 
-let currentFilter = 'All';
+let currentPage = 'home';
+
+let currentRecipeFilter = 'All';
 
 let editingIngredientId = null;
 
 let editingRecipeId = null;
 
+let currentRecipePhoto = '';
 
-/* =========================
-   BASIC HELPERS
-========================= */
 
-function el(id){
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function $(id){
+
   return document.getElementById(id);
+
 }
 
+
+function makeId(){
+
+  return Date.now().toString(36)
+       + Math.random().toString(36).slice(2,9);
+
+}
+
+
+function money(value){
+
+  const n = Number(value);
+
+  return '$' +
+    (Number.isFinite(n) ? n : 0).toFixed(2);
+
+}
+
+
+function escapeHTML(value){
+
+  return String(value ?? '').replace(
+    /[&<>"']/g,
+
+    function(ch){
+
+      return {
+
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#39;'
+
+      }[ch];
+
+    }
+
+  );
+
+}
+
+
+function escapeAttr(value){
+
+  return escapeHTML(value);
+
+}
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
 
 function loadData(){
 
   try{
 
-    const saved =
-      JSON.parse(
-        localStorage.getItem(STORAGE_KEY)
-      );
+    const raw =
+      localStorage.getItem(STORAGE_KEY);
 
-    if(
-      saved &&
-      Array.isArray(saved.ingredients) &&
-      Array.isArray(saved.recipes)
-    ){
-      return saved;
+    if(raw){
+
+      const parsed =
+        JSON.parse(raw);
+
+      if(
+        parsed &&
+        Array.isArray(parsed.ingredients) &&
+        Array.isArray(parsed.recipes)
+      ){
+
+        return parsed;
+
+      }
+
     }
 
   }catch(error){
 
-    console.log(
-      'Could not load saved data',
-      error
-    );
+    console.error(error);
 
   }
 
+
   return {
+
     ingredients:[],
     recipes:[]
+
   };
+
 }
 
 
@@ -776,214 +1492,419 @@ function saveData(){
 }
 
 
-function newId(){
+/* =========================================================
+   FIND DATA
+========================================================= */
 
-  return (
-    Date.now().toString(36) +
-    Math.random()
-      .toString(36)
-      .substring(2,8)
-  );
+function ingredientById(id){
 
-}
-
-
-function escapeHTML(value){
-
-  return String(value ?? '')
-    .replace(
-      /[&<>"']/g,
-      function(character){
-
-        return {
-          '&':'&amp;',
-          '<':'&lt;',
-          '>':'&gt;',
-          '"':'&quot;',
-          "'":'&#39;'
-        }[character];
-
-      }
-    );
+  return data.ingredients.find(
+    item =>
+      String(item.id) === String(id)
+  ) || null;
 
 }
 
 
-function money(value){
+function recipeById(id){
 
-  return '$' +
-    Number(value || 0)
-      .toFixed(2);
-
-}
-
-
-/* =========================
-   NAVIGATION
-========================= */
-
-function showPage(page){
-
-  const pages = [
-    'home',
-    'ingredients',
-    'recipes',
-    'scan',
-    'settings'
-  ];
-
-  pages.forEach(
-    function(name){
-
-      el(name)
-        .classList
-        .toggle(
-          'hidden',
-          name !== page
-        );
-
-    }
-  );
-
-
-  const navMap = {
-    home:'nh',
-    ingredients:'niav',
-    recipes:'nrav',
-    scan:'nsc',
-    settings:'nset'
-  };
-
-
-  document
-    .querySelectorAll('nav button')
-    .forEach(
-      function(button){
-        button.classList.remove('active');
-      }
-    );
-
-
-  if(navMap[page]){
-
-    el(navMap[page])
-      .classList
-      .add('active');
-
-  }
-
-
-  window.scrollTo(0,0);
-
-
-  if(page === 'home'){
-    renderHome();
-  }
-
-  if(page === 'ingredients'){
-    renderIngredients();
-  }
-
-  if(page === 'recipes'){
-    renderRecipes();
-  }
-
-  if(page === 'scan'){
-    renderScanForm();
-  }
+  return data.recipes.find(
+    item =>
+      String(item.id) === String(id)
+  ) || null;
 
 }
 
 
-/* =========================
-   UNIT CONVERSION
-========================= */
+/* =========================================================
+   UNIT SYSTEM
+========================================================= */
 
-function normalizeUnit(quantity,unit){
+function normalizeUnit(unit){
 
   const u =
     String(unit || '')
-      .toLowerCase()
-      .trim();
+      .trim()
+      .toLowerCase();
 
 
-  const conversion = {
+  const aliases = {
 
-    kg:[1000,'g'],
+    gram:'g',
+    grams:'g',
 
-    g:[1,'g'],
+    kilogram:'kg',
+    kilograms:'kg',
 
-    lb:[453.592,'g'],
+    ounce:'oz',
+    ounces:'oz',
 
-    oz:[28.3495,'g'],
+    pound:'lb',
+    pounds:'lb',
 
-    l:[1000,'ml'],
+    milliliter:'ml',
+    milliliters:'ml',
+    millilitre:'ml',
+    millilitres:'ml',
 
-    ml:[1,'ml'],
+    liter:'L',
+    liters:'L',
+    litre:'L',
+    litres:'L',
 
-    dozen:[12,'each'],
+    'fluid ounce':'fl oz',
+    'fluid ounces':'fl oz',
+    'fl. oz':'fl oz',
 
-    each:[1,'each']
+    ea:'each',
 
-  };
-
-
-  if(conversion[u]){
-
-    return {
-
-      quantity:
-        Number(quantity || 0) *
-        conversion[u][0],
-
-      unit:
-        conversion[u][1]
-
-    };
-
-  }
-
-
-  return {
-
-    quantity:
-      Number(quantity || 0),
-
-    unit:u
+    doz:'dozen'
 
   };
+
+
+  return aliases[u] || unit;
 
 }
 
 
-function getIngredientCost(
-  ingredient,
-  quantity,
-  unit
-){
+/*
+  Weight:
+  g / kg / oz / lb
 
-  if(!ingredient){
-    return null;
+  Volume:
+  ml / L / fl oz
+
+  Count:
+  each / dozen
+*/
+
+function unitGroup(unit){
+
+  const u =
+    normalizeUnit(unit);
+
+
+  if(
+    ['g','kg','oz','lb']
+      .includes(u)
+  ){
+
+    return 'weight';
+
   }
 
 
-  const used =
-    normalizeUnit(
-      quantity,
-      unit
+  if(
+    ['ml','L','fl oz']
+      .includes(u)
+  ){
+
+    return 'volume';
+
+  }
+
+
+  if(
+    ['each','dozen']
+      .includes(u)
+  ){
+
+    return 'count';
+
+  }
+
+
+  return 'unknown';
+
+}
+
+
+/* =========================================================
+   CONVERT TO BASE UNITS
+========================================================= */
+
+function toBase(quantity,unit){
+
+  const q = Number(quantity);
+
+  const u =
+    normalizeUnit(unit);
+
+
+  if(!Number.isFinite(q)){
+
+    return null;
+
+  }
+
+
+  switch(u){
+
+    /* WEIGHT */
+
+    case 'g':
+      return q;
+
+    case 'kg':
+      return q * 1000;
+
+    case 'oz':
+      return q * 28.349523125;
+
+    case 'lb':
+      return q * 453.59237;
+
+
+    /* VOLUME */
+
+    case 'ml':
+      return q;
+
+    case 'L':
+      return q * 1000;
+
+    case 'fl oz':
+      return q * 29.5735295625;
+
+
+    /* COUNT */
+
+    case 'each':
+      return q;
+
+    case 'dozen':
+      return q * 12;
+
+
+    default:
+      return null;
+
+  }
+
+}
+
+
+/* =========================================================
+   FROM BASE
+========================================================= */
+
+function fromBase(baseQuantity,unit){
+
+  const q = Number(baseQuantity);
+
+  const u =
+    normalizeUnit(unit);
+
+
+  if(!Number.isFinite(q)){
+
+    return null;
+
+  }
+
+
+  switch(u){
+
+    case 'g':
+      return q;
+
+    case 'kg':
+      return q / 1000;
+
+    case 'oz':
+      return q / 28.349523125;
+
+    case 'lb':
+      return q / 453.59237;
+
+
+    case 'ml':
+      return q;
+
+    case 'L':
+      return q / 1000;
+
+    case 'fl oz':
+      return q / 29.5735295625;
+
+
+    case 'each':
+      return q;
+
+    case 'dozen':
+      return q / 12;
+
+
+    default:
+      return null;
+
+  }
+
+}
+
+
+/* =========================================================
+   CONVERT QUANTITY
+========================================================= */
+
+function convertQuantity(
+  quantity,
+  fromUnit,
+  toUnit
+){
+
+  const from =
+    normalizeUnit(fromUnit);
+
+  const to =
+    normalizeUnit(toUnit);
+
+
+  if(from === to){
+
+    return Number(quantity);
+
+  }
+
+
+  if(
+    unitGroup(from) !==
+    unitGroup(to)
+  ){
+
+    return null;
+
+  }
+
+
+  const base =
+    toBase(quantity,from);
+
+
+  if(base === null){
+
+    return null;
+
+  }
+
+
+  return fromBase(base,to);
+
+}
+
+
+/* =========================================================
+   *** IMPORTANT COST CALCULATOR ***
+========================================================= */
+
+function calculateIngredientCost(
+  ingredient,
+  recipeQty,
+  recipeUnit
+){
+
+  if(!ingredient){
+
+    return null;
+
+  }
+
+
+  const purchaseQty =
+    Number(ingredient.qty);
+
+  const purchasePrice =
+    Number(ingredient.price);
+
+  const usedQty =
+    Number(recipeQty);
+
+
+  if(
+    !Number.isFinite(purchaseQty) ||
+    purchaseQty <= 0
+  ){
+
+    return null;
+
+  }
+
+
+  if(
+    !Number.isFinite(purchasePrice) ||
+    purchasePrice < 0
+  ){
+
+    return null;
+
+  }
+
+
+  if(
+    !Number.isFinite(usedQty) ||
+    usedQty <= 0
+  ){
+
+    return null;
+
+  }
+
+
+  const purchaseUnit =
+    normalizeUnit(ingredient.unit);
+
+  const useUnit =
+    normalizeUnit(recipeUnit);
+
+
+  /*
+    Same unit.
+  */
+
+  if(purchaseUnit === useUnit){
+
+    return (
+      purchasePrice *
+      (usedQty / purchaseQty)
+    );
+
+  }
+
+
+  /*
+    Do not convert weight into volume
+    or volume into weight.
+  */
+
+  if(
+    unitGroup(purchaseUnit) !==
+    unitGroup(useUnit)
+  ){
+
+    return null;
+
+  }
+
+
+  const purchaseBase =
+    toBase(
+      purchaseQty,
+      purchaseUnit
     );
 
 
-  const purchased =
-    normalizeUnit(
-      ingredient.qty,
-      ingredient.unit
+  const usedBase =
+    toBase(
+      usedQty,
+      useUnit
     );
 
 
   if(
-    used.unit !== purchased.unit ||
-    purchased.quantity <= 0
+    purchaseBase === null ||
+    usedBase === null ||
+    purchaseBase <= 0
   ){
 
     return null;
@@ -992,227 +1913,335 @@ function getIngredientCost(
 
 
   return (
-    Number(ingredient.price || 0) *
-    used.quantity /
-    purchased.quantity
+    purchasePrice *
+    (usedBase / purchaseBase)
   );
 
 }
 
 
-function findIngredient(id){
+/* =========================================================
+   NAVIGATION
+========================================================= */
 
-  return data.ingredients.find(
-    function(item){
-      return item.id === id;
-    }
-  );
+function showPage(page){
 
-}
+  currentPage = page;
 
 
-/* =========================
-   RECIPE COST
-========================= */
+  const pages = {
 
-function calculateRecipe(recipe){
+    home:'homePage',
 
-  let total = 0;
+    ingredients:
+      'ingredientsPage',
 
-  let missing = 0;
+    recipes:
+      'recipesPage',
 
+    invoice:
+      'invoicePage',
 
-  (recipe.ingredients || [])
-    .forEach(
-      function(item){
-
-        const ingredient =
-          findIngredient(
-            item.ingredientId
-          );
-
-
-        const cost =
-          getIngredientCost(
-            ingredient,
-            item.qty,
-            item.unit
-          );
-
-
-        if(cost === null){
-
-          missing++;
-
-        }else{
-
-          total += cost;
-
-        }
-
-      }
-    );
-
-
-  const yieldAmount =
-    Number(recipe.yield || 1) || 1;
-
-
-  const perPortion =
-    total / yieldAmount;
-
-
-  const pricingValue =
-    Number(recipe.markup || 0);
-
-
-  let sellingPrice = 0;
-
-
-  if(recipe.mode === 'food'){
-
-    /*
-      Target food cost.
-
-      Example:
-      $5 cost / 25% = $20 selling price.
-    */
-
-    sellingPrice =
-      pricingValue > 0
-        ? perPortion /
-          (pricingValue / 100)
-        : 0;
-
-  }else{
-
-    /*
-      Markup.
-
-      Example:
-      $5 cost + 100% = $10.
-    */
-
-    sellingPrice =
-      perPortion *
-      (1 + pricingValue / 100);
-
-  }
-
-
-  const foodCost =
-    sellingPrice > 0
-      ? (
-          perPortion /
-          sellingPrice
-        ) * 100
-      : 0;
-
-
-  return {
-
-    total:total,
-
-    per:perPortion,
-
-    sell:sellingPrice,
-
-    food:foodCost,
-
-    missing:missing
+    settings:
+      'settingsPage'
 
   };
 
-}
+
+  Object.keys(pages).forEach(
+    key => {
+
+      $(pages[key])
+        .classList
+        .toggle(
+          'active',
+          key === page
+        );
+
+    }
+  );
 
 
-/* =========================
-   HOME
-========================= */
+  const navMap = {
 
-function renderHome(){
+    home:'navHome',
 
-  el('nr').textContent =
-    data.recipes.length;
+    ingredients:
+      'navIngredients',
+
+    recipes:
+      'navRecipes',
+
+    invoice:
+      'navInvoice',
+
+    settings:
+      'navSettings'
+
+  };
 
 
-  el('ni').textContent =
-    data.ingredients.length;
-
-
-  const categories =
-    new Set(
-      data.recipes
-        .map(
-          function(recipe){
-            return recipe.category;
-          }
-        )
-        .filter(Boolean)
+  Object.values(navMap)
+    .forEach(
+      id =>
+        $(id)
+          .classList
+          .remove('active')
     );
 
 
-  el('nc').textContent =
-    categories.size;
+  $(navMap[page])
+    .classList
+    .add('active');
 
 
-  const foodCosts =
-    data.recipes
-      .map(
-        function(recipe){
-          return calculateRecipe(recipe).food;
-        }
-      )
-      .filter(
-        function(value){
-          return value > 0;
-        }
-      );
+  if(page === 'home'){
 
-
-  let average = 0;
-
-
-  if(foodCosts.length){
-
-    average =
-      foodCosts.reduce(
-        function(total,value){
-          return total + value;
-        },
-        0
-      ) /
-      foodCosts.length;
+    renderHome();
 
   }
 
 
-  el('nf').textContent =
-    average.toFixed(1) +
-    '%';
+  if(page === 'ingredients'){
+
+    renderIngredients();
+
+  }
+
+
+  if(page === 'recipes'){
+
+    renderRecipesList();
+
+  }
+
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+function renderHome(){
+
+  $('homeIngredientCount')
+    .textContent =
+      data.ingredients.length;
+
+
+  $('homeRecipeCount')
+    .textContent =
+      data.recipes.length;
+
+
+  const box =
+    $('homeRecipes');
+
+
+  if(data.recipes.length === 0){
+
+    box.innerHTML =
+      '<div class="empty">' +
+      'No recipes yet.<br><br>' +
+      'Create your first recipe.' +
+      '</div>';
+
+    return;
+
+  }
 
 
   const recent =
-    data.recipes
-      .slice()
+    [...data.recipes]
       .reverse()
       .slice(0,5);
 
 
-  el('recent').innerHTML =
-    recent.length
-      ? recent.map(recipeCard).join('')
-      : '<div class="empty">No recipes yet.</div>';
+  box.innerHTML =
+    recent
+      .map(recipeCardHTML)
+      .join('');
 
 
-  attachRecipeButtons();
+  attachRecipeCardEvents(box);
 
 }
 
 
-/* =========================
-   INGREDIENTS
-========================= */
+/* =========================================================
+   RECIPE CARD
+========================================================= */
+
+function recipeCardHTML(recipe){
+
+  const total =
+    calculateRecipeTotal(recipe);
+
+
+  const yieldQty =
+    Number(recipe.yieldQty) > 0
+      ? Number(recipe.yieldQty)
+      : 1;
+
+
+  const portionCost =
+    total / yieldQty;
+
+
+  const selling =
+    calculateSellingPrice(
+      portionCost,
+      recipe.pricingMethod,
+      recipe.pricingValue
+    );
+
+
+  return `
+
+    <div class="recipe-card">
+
+      ${
+        recipe.photo
+          ? `<img
+               class="photo"
+               src="${escapeAttr(recipe.photo)}">`
+          : ''
+      }
+
+      <h3>
+        ${escapeHTML(
+          recipe.name ||
+          'Unnamed Recipe'
+        )}
+      </h3>
+
+
+      <div class="recipe-meta">
+
+        ${escapeHTML(
+          recipe.category || ''
+        )}
+
+        • Cost
+        ${money(portionCost)}
+        /portion
+
+        • Sell
+        ${money(selling)}
+        /portion
+
+      </div>
+
+
+      <div class="recipe-actions">
+
+        <button
+          class="btn secondary"
+          data-edit-recipe="${escapeAttr(recipe.id)}">
+
+          Edit
+
+        </button>
+
+
+        <button
+          class="btn danger"
+          data-delete-recipe="${escapeAttr(recipe.id)}">
+
+          Delete
+
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   RECIPE CARD BUTTONS
+========================================================= */
+
+function attachRecipeCardEvents(container){
+
+  container
+    .querySelectorAll(
+      '[data-edit-recipe]'
+    )
+    .forEach(btn => {
+
+      btn.addEventListener(
+        'click',
+        () =>
+          openRecipeEditor(
+            btn.dataset.editRecipe
+          )
+      );
+
+    });
+
+
+  container
+    .querySelectorAll(
+      '[data-delete-recipe]'
+    )
+    .forEach(btn => {
+
+      btn.addEventListener(
+        'click',
+        () =>
+          deleteRecipe(
+            btn.dataset.deleteRecipe
+          )
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+   INGREDIENT FORM
+========================================================= */
+
+function populateUnitSelect(
+  select,
+  selected
+){
+
+  select.innerHTML =
+    UNITS
+      .map(unit =>
+
+        `<option
+          value="${escapeAttr(unit)}">
+
+          ${escapeHTML(unit)}
+
+        </option>`
+
+      )
+      .join('');
+
+
+  if(
+    selected &&
+    UNITS.includes(selected)
+  ){
+
+    select.value = selected;
+
+  }
+
+}
+
+
+/* =========================================================
+   OPEN INGREDIENT
+========================================================= */
 
 function openIngredientForm(id){
 
@@ -1220,218 +2249,108 @@ function openIngredientForm(id){
     id || null;
 
 
-  const item =
+  const ingredient =
     id
-      ? findIngredient(id)
-      : {
-
-          name:'',
-
-          category:'',
-
-          supplier:'',
-
-          qty:'',
-
-          unit:'kg',
-
-          price:'',
-
-          date:
-            new Date()
-              .toISOString()
-              .slice(0,10),
-
-          notes:''
-
-        };
+      ? ingredientById(id)
+      : null;
 
 
-  const units = [
-    'kg',
-    'g',
-    'lb',
-    'oz',
-    'l',
-    'ml',
-    'each',
-    'dozen'
-  ];
-
-
-  el('iform')
+  $('ingredientFormCard')
     .classList
     .remove('hidden');
 
 
-  el('iform').innerHTML = `
-
-    <h2>
-      ${id ? '✏️ Edit' : '➕ Add'}
-      Ingredient
-    </h2>
-
-
-    <label>Name *</label>
-
-    <input
-      id="ingredientName"
-      value="${escapeHTML(item.name)}">
+  $('ingredientFormTitle')
+    .textContent =
+      ingredient
+        ? 'Edit Ingredient'
+        : 'Add Ingredient';
 
 
-    <div class="grid2">
-
-      <div>
-
-        <label>Category</label>
-
-        <input
-          id="ingredientCategory"
-          value="${escapeHTML(item.category || '')}">
-
-      </div>
+  $('ingredientName').value =
+    ingredient?.name || '';
 
 
-      <div>
-
-        <label>Supplier</label>
-
-        <input
-          id="ingredientSupplier"
-          value="${escapeHTML(item.supplier || '')}">
-
-      </div>
-
-    </div>
+  $('ingredientCategory').value =
+    ingredient?.category || '';
 
 
-    <div class="grid2">
-
-      <div>
-
-        <label>Purchase Quantity *</label>
-
-        <input
-          id="ingredientQty"
-          type="number"
-          step="any"
-          value="${escapeHTML(item.qty)}">
-
-      </div>
+  $('ingredientSupplier').value =
+    ingredient?.supplier || '';
 
 
-      <div>
-
-        <label>Purchase Unit *</label>
-
-        <select id="ingredientUnit">
-
-          ${units.map(
-            function(unit){
-
-              return `
-                <option
-                  value="${unit}"
-                  ${item.unit === unit ? 'selected' : ''}>
-                  ${unit}
-                </option>
-              `;
-
-            }
-          ).join('')}
-
-        </select>
-
-      </div>
-
-    </div>
+  $('ingredientDate').value =
+    ingredient?.date ||
+    new Date()
+      .toISOString()
+      .slice(0,10);
 
 
-    <label>Purchase Price *</label>
-
-    <input
-      id="ingredientPrice"
-      type="number"
-      step="0.01"
-      value="${escapeHTML(item.price)}">
+  $('ingredientQty').value =
+    ingredient?.qty ?? '';
 
 
-    <label>Date</label>
-
-    <input
-      id="ingredientDate"
-      type="date"
-      value="${escapeHTML(item.date || '')}">
+  $('ingredientPrice').value =
+    ingredient?.price ?? '';
 
 
-    <label>Notes</label>
-
-    <textarea id="ingredientNotes">${escapeHTML(item.notes || '')}</textarea>
-
-
-    <div class="row">
-
-      <button
-        class="light"
-        id="cancelIngredient">
-        Cancel
-      </button>
-
-      <button
-        class="blue"
-        id="saveIngredient">
-        Save
-      </button>
-
-    </div>
-
-  `;
+  $('ingredientNotes').value =
+    ingredient?.notes || '';
 
 
-  el('cancelIngredient')
-    .addEventListener(
-      'click',
-      closeIngredientForm
-    );
+  populateUnitSelect(
+    $('ingredientUnit'),
+    ingredient?.unit || 'kg'
+  );
 
 
-  el('saveIngredient')
-    .addEventListener(
-      'click',
-      saveIngredient
-    );
+  $('ingredientFormCard')
+    .scrollIntoView({
+      behavior:'smooth',
+      block:'start'
+    });
 
 }
 
 
+/* =========================================================
+   CLOSE INGREDIENT
+========================================================= */
+
 function closeIngredientForm(){
 
-  editingIngredientId = null;
+  editingIngredientId =
+    null;
 
-  el('iform')
+
+  $('ingredientFormCard')
     .classList
     .add('hidden');
 
 }
 
 
+/* =========================================================
+   SAVE INGREDIENT
+========================================================= */
+
 function saveIngredient(){
 
   const name =
-    el('ingredientName')
+    $('ingredientName')
       .value
       .trim();
 
 
   const qty =
     Number(
-      el('ingredientQty').value
+      $('ingredientQty').value
     );
 
 
   const price =
     Number(
-      el('ingredientPrice').value
+      $('ingredientPrice').value
     );
 
 
@@ -1444,7 +2363,7 @@ function saveIngredient(){
   ){
 
     alert(
-      'Enter a name, quantity and price.'
+      'Please enter an ingredient name, purchase quantity and purchase price.'
     );
 
     return;
@@ -1456,51 +2375,60 @@ function saveIngredient(){
 
     id:
       editingIngredientId ||
-      newId(),
+      makeId(),
 
-    name:name,
+    name,
 
     category:
-      el('ingredientCategory')
+      $('ingredientCategory')
         .value
         .trim(),
 
     supplier:
-      el('ingredientSupplier')
+      $('ingredientSupplier')
         .value
         .trim(),
 
-    qty:qty,
+    qty,
 
     unit:
-      el('ingredientUnit').value,
+      normalizeUnit(
+        $('ingredientUnit').value
+      ),
 
-    price:price,
+    price,
 
     date:
-      el('ingredientDate').value,
+      $('ingredientDate').value,
 
     notes:
-      el('ingredientNotes').value
+      $('ingredientNotes')
+        .value
+        .trim()
 
   };
 
 
-  const index =
-    data.ingredients.findIndex(
-      function(existing){
-        return existing.id === item.id;
-      }
-    );
+  if(editingIngredientId){
+
+    const index =
+      data.ingredients.findIndex(
+        x =>
+          String(x.id) ===
+          String(editingIngredientId)
+      );
 
 
-  if(index === -1){
+    if(index >= 0){
 
-    data.ingredients.push(item);
+      data.ingredients[index] =
+        item;
+
+    }
 
   }else{
 
-    data.ingredients[index] = item;
+    data.ingredients.push(item);
 
   }
 
@@ -1513,198 +2441,42 @@ function saveIngredient(){
 
   renderHome();
 
-  renderRecipes();
-
 }
 
 
-function renderIngredients(){
-
-  const search =
-    (
-      el('isearch').value || ''
-    ).toLowerCase();
-
-
-  const list =
-    data.ingredients.filter(
-      function(item){
-
-        const text =
-          [
-            item.name,
-            item.category,
-            item.supplier
-          ]
-          .join(' ')
-          .toLowerCase();
-
-
-        return text.includes(search);
-
-      }
-    );
-
-
-  el('ilist').innerHTML =
-    list.length
-      ? list.map(
-          function(item){
-
-            const normalized =
-              normalizeUnit(
-                item.qty,
-                item.unit
-              );
-
-
-            const unitCost =
-              normalized.quantity
-                ? Number(item.price) /
-                  normalized.quantity
-                : 0;
-
-
-            return `
-
-              <div class="item">
-
-                <div class="itemtop">
-
-                  <div>
-
-                    <b>
-                      ${escapeHTML(item.name)}
-                    </b>
-
-                    <div class="muted">
-
-                      ${escapeHTML(
-                        item.category ||
-                        'Other'
-                      )}
-
-                      ${
-                        item.supplier
-                          ? ' • ' +
-                            escapeHTML(
-                              item.supplier
-                            )
-                          : ''
-                      }
-
-                    </div>
-
-                  </div>
-
-
-                  <b class="price">
-                    ${money(item.price)}
-                  </b>
-
-                </div>
-
-
-                <div class="chips">
-
-                  <span class="chip">
-                    Buy
-                    ${escapeHTML(item.qty)}
-                    ${escapeHTML(item.unit)}
-                  </span>
-
-                  <span class="chip">
-                    ${money(unitCost)}
-                    /
-                    ${escapeHTML(normalized.unit)}
-                  </span>
-
-                </div>
-
-
-                <div class="row">
-
-                  <button
-                    class="light editIngredient"
-                    data-id="${item.id}">
-                    ✏️ Edit
-                  </button>
-
-                  <button
-                    class="red deleteIngredient"
-                    data-id="${item.id}">
-                    Delete
-                  </button>
-
-                </div>
-
-              </div>
-
-            `;
-
-          }
-        ).join('')
-      : '<div class="card empty">No ingredients found.</div>';
-
-
-  document
-    .querySelectorAll('.editIngredient')
-    .forEach(
-      function(button){
-
-        button.addEventListener(
-          'click',
-          function(){
-
-            openIngredientForm(
-              button.dataset.id
-            );
-
-          }
-        );
-
-      }
-    );
-
-
-  document
-    .querySelectorAll('.deleteIngredient')
-    .forEach(
-      function(button){
-
-        button.addEventListener(
-          'click',
-          function(){
-
-            deleteIngredient(
-              button.dataset.id
-            );
-
-          }
-        );
-
-      }
-    );
-
-}
-
+/* =========================================================
+   DELETE INGREDIENT
+========================================================= */
 
 function deleteIngredient(id){
 
+  const ingredient =
+    ingredientById(id);
+
+
+  if(!ingredient){
+
+    return;
+
+  }
+
+
   if(
     !confirm(
-      'Delete this ingredient?'
+      `Delete "${ingredient.name}"?`
     )
   ){
+
     return;
+
   }
 
 
   data.ingredients =
     data.ingredients.filter(
-      function(item){
-        return item.id !== id;
-      }
+      x =>
+        String(x.id) !==
+        String(id)
     );
 
 
@@ -1712,443 +2484,706 @@ function deleteIngredient(id){
 
   renderIngredients();
 
-  renderHome();
+}
 
-  renderRecipes();
+
+/* =========================================================
+   INGREDIENT LIST
+========================================================= */
+
+function renderIngredients(){
+
+  const box =
+    $('ingredientList');
+
+
+  if(data.ingredients.length === 0){
+
+    box.innerHTML =
+      '<div class="empty">' +
+      'No ingredients logged yet.' +
+      '</div>';
+
+    return;
+
+  }
+
+
+  box.innerHTML =
+    data.ingredients
+      .map(item => `
+
+        <div class="recipe-card">
+
+          <h3>
+            ${escapeHTML(item.name)}
+          </h3>
+
+
+          <div class="recipe-meta">
+
+            ${
+              escapeHTML(
+                item.category ||
+                'Uncategorized'
+              )
+            }
+
+            ${
+              item.supplier
+                ? ' • ' +
+                  escapeHTML(
+                    item.supplier
+                  )
+                : ''
+            }
+
+          </div>
+
+
+          <div>
+
+            Purchase:
+            <strong>
+
+              ${Number(item.qty)
+                .toLocaleString()}
+
+              ${escapeHTML(item.unit)}
+
+            </strong>
+
+            for
+
+            <strong>
+              ${money(item.price)}
+            </strong>
+
+          </div>
+
+
+          <div
+            class="small muted"
+            style="margin-top:5px">
+
+            Unit cost:
+            ${formatUnitCost(item)}
+
+          </div>
+
+
+          <div
+            class="recipe-actions"
+            style="margin-top:10px">
+
+            <button
+              class="btn secondary"
+              data-edit-ingredient="${escapeAttr(item.id)}">
+
+              Edit
+
+            </button>
+
+
+            <button
+              class="btn danger"
+              data-delete-ingredient="${escapeAttr(item.id)}">
+
+              Delete
+
+            </button>
+
+          </div>
+
+        </div>
+
+      `)
+      .join('');
+
+
+  box
+    .querySelectorAll(
+      '[data-edit-ingredient]'
+    )
+    .forEach(btn => {
+
+      btn.addEventListener(
+        'click',
+        () =>
+          openIngredientForm(
+            btn.dataset.editIngredient
+          )
+      );
+
+    });
+
+
+  box
+    .querySelectorAll(
+      '[data-delete-ingredient]'
+    )
+    .forEach(btn => {
+
+      btn.addEventListener(
+        'click',
+        () =>
+          deleteIngredient(
+            btn.dataset.deleteIngredient
+          )
+      );
+
+    });
 
 }
 
 
-/* =========================
-   RECIPE CARDS
-========================= */
+/* =========================================================
+   UNIT COST DISPLAY
+========================================================= */
 
-function recipeCard(recipe){
+function formatUnitCost(item){
+
+  const qty =
+    Number(item.qty);
+
+
+  const price =
+    Number(item.price);
+
+
+  if(
+    !qty ||
+    !Number.isFinite(price)
+  ){
+
+    return '—';
+
+  }
+
+
+  const group =
+    unitGroup(item.unit);
+
+
+  const baseUnit =
+    group === 'weight'
+      ? 'g'
+      : group === 'volume'
+        ? 'ml'
+        : 'each';
+
+
+  const baseQty =
+    toBase(
+      qty,
+      item.unit
+    );
+
+
+  if(
+    !baseQty ||
+    baseQty <= 0
+  ){
+
+    return '—';
+
+  }
+
 
   const cost =
-    calculateRecipe(recipe);
+    price / baseQty;
 
 
-  return `
+  return (
+    `${money(cost)} / ${baseUnit}`
+  );
 
-    <div class="item">
-
-      <div class="itemtop">
-
-        <b>
-          ${escapeHTML(recipe.name)}
-        </b>
-
-        <b class="price">
-          ${money(cost.sell)}
-        </b>
-
-      </div>
+}
 
 
-      ${
-        recipe.photo
-          ? `
-            <img
-              class="recipeimg"
-              src="${recipe.photo}">
-          `
-          : ''
-      }
+/* =========================================================
+   RECIPE CATEGORIES
+========================================================= */
+
+function renderCategoryButtons(){
+
+  const box =
+    $('categoryButtons');
 
 
-      <div class="muted">
-
-        ${escapeHTML(recipe.category)}
-
-        • Yield
-        ${escapeHTML(recipe.yield)}
-        ${escapeHTML(recipe.yunit || 'portion')}
-
-      </div>
+  const categories =
+    ['All', ...CATEGORIES];
 
 
-      <div class="chips">
-
-        <span class="chip">
-          Cost ${money(cost.total)}
-        </span>
-
-        <span class="chip">
-          ${money(cost.per)}/portion
-        </span>
-
-        <span class="chip">
-
-          ${
-            recipe.mode === 'food'
-              ? 'Target food ' +
-                recipe.markup +
-                '%'
-              : 'Markup ' +
-                recipe.markup +
-                '%'
-          }
-
-        </span>
-
-        <span class="chip">
-          Food ${cost.food.toFixed(1)}%
-        </span>
-
-      </div>
-
-
-      ${
-        cost.missing
-          ? `
-            <div class="notice">
-              ${cost.missing}
-              ingredient(s) could not be costed
-              because the units do not match.
-            </div>
-          `
-          : ''
-      }
-
-
-      <div class="row">
+  box.innerHTML =
+    categories
+      .map(category => `
 
         <button
-          class="light editRecipe"
-          data-id="${recipe.id}">
-          ✏️ Edit
+          class="category-btn ${
+            currentRecipeFilter === category
+              ? 'active'
+              : ''
+          }"
+          data-category="${escapeAttr(category)}">
+
+          ${escapeHTML(category)}
+
         </button>
 
-        <button
-          class="red deleteRecipe"
-          data-id="${recipe.id}">
-          Delete
-        </button>
-
-      </div>
-
-    </div>
-
-  `;
-
-}
+      `)
+      .join('');
 
 
-/* =========================
-   RECIPES
-========================= */
+  box
+    .querySelectorAll(
+      '[data-category]'
+    )
+    .forEach(btn => {
 
-function renderRecipes(){
+      btn.addEventListener(
+        'click',
+        () => {
 
-  if(editingRecipeId){
-    return;
-  }
+          currentRecipeFilter =
+            btn.dataset.category;
 
+          renderRecipesList();
 
-  const search =
-    (
-      el('rsearch').value || ''
-    ).toLowerCase();
+        }
+      );
 
-
-  const recipes =
-    data.recipes.filter(
-      function(recipe){
-
-        const categoryMatches =
-          currentFilter === 'All' ||
-          recipe.category === currentFilter;
-
-
-        const text =
-          [
-            recipe.name,
-            recipe.description,
-            recipe.category
-          ]
-          .join(' ')
-          .toLowerCase();
-
-
-        return (
-          categoryMatches &&
-          text.includes(search)
-        );
-
-      }
-    );
-
-
-  el('rlist').innerHTML =
-    recipes.length
-      ? recipes
-          .map(recipeCard)
-          .join('')
-      : '<div class="card empty">No recipes found.</div>';
-
-
-  attachRecipeButtons();
+    });
 
 }
 
 
-function attachRecipeButtons(){
+/* =========================================================
+   RECIPE LIST
+========================================================= */
 
-  document
-    .querySelectorAll('.editRecipe')
-    .forEach(
-      function(button){
+function renderRecipesList(){
 
-        button.addEventListener(
-          'click',
-          function(){
-
-            editRecipe(
-              button.dataset.id
-            );
-
-          }
-        );
-
-      }
-    );
-
-
-  document
-    .querySelectorAll('.deleteRecipe')
-    .forEach(
-      function(button){
-
-        button.addEventListener(
-          'click',
-          function(){
-
-            deleteRecipe(
-              button.dataset.id
-            );
-
-          }
-        );
-
-      }
-    );
-
-}
-
-
-function newRecipe(){
-
-  editingRecipeId = 'new';
-
-
-  openRecipeEditor({
-
-    id:'new',
-
-    name:'',
-
-    category:'Beef',
-
-    description:'',
-
-    photo:'',
-
-    yield:1,
-
-    yunit:'portion',
-
-    mode:'markup',
-
-    markup:100,
-
-    ingredients:[],
-
-    instructions:''
-
-  });
-
-}
-
-
-function editRecipe(id){
-
-  const recipe =
-    data.recipes.find(
-      function(item){
-        return item.id === id;
-      }
-    );
-
-
-  if(!recipe){
-    return;
-  }
-
-
-  editingRecipeId = id;
-
-  openRecipeEditor(recipe);
-
-}
-
-
-function openRecipeEditor(recipe){
-
-  el('rlistview')
-    .classList
-    .add('hidden');
-
-
-  el('reditor')
+  $('recipeListView')
     .classList
     .remove('hidden');
 
 
-  el('reditor').innerHTML = `
-
-    <h2>
-      ${
-        recipe.id === 'new'
-          ? '➕ New Recipe'
-          : '✏️ Edit Recipe'
-      }
-    </h2>
+  $('recipeEditorView')
+    .classList
+    .add('hidden');
 
 
-    <label>Recipe Name *</label>
-
-    <input
-      id="recipeName"
-      value="${escapeHTML(recipe.name)}">
+  renderCategoryButtons();
 
 
-    <label>Category</label>
-
-    <select id="recipeCategory">
-
-      ${CATEGORIES.map(
-        function(category){
-
-          return `
-            <option
-              value="${category}"
-              ${
-                recipe.category === category
-                  ? 'selected'
-                  : ''
-              }>
-              ${category}
-            </option>
-          `;
-
-        }
-      ).join('')}
-
-    </select>
+  let recipes =
+    data.recipes;
 
 
-    <label>Description</label>
+  if(
+    currentRecipeFilter !==
+    'All'
+  ){
 
-    <textarea id="recipeDescription">${escapeHTML(
-      recipe.description || ''
-    )}</textarea>
+    recipes =
+      recipes.filter(
+        recipe =>
+          recipe.category ===
+          currentRecipeFilter
+      );
 
-
-    <label>Photo</label>
-
-    <input
-      id="recipeFile"
-      type="file"
-      accept="image/*">
-
-
-    <img
-      id="recipePreview"
-      class="recipeimg ${
-        recipe.photo
-          ? ''
-          : 'hidden'
-      }"
-      src="${escapeHTML(recipe.photo || '')}">
+  }
 
 
-    <input
-      id="recipePhotoData"
-      type="hidden"
-      value="${escapeHTML(recipe.photo || '')}">
+  const box =
+    $('recipeList');
 
 
-    <div class="grid2">
+  if(recipes.length === 0){
+
+    box.innerHTML =
+      '<div class="empty">' +
+      'No recipes in this category.' +
+      '</div>';
+
+    return;
+
+  }
+
+
+  box.innerHTML =
+    recipes
+      .map(recipeCardHTML)
+      .join('');
+
+
+  attachRecipeCardEvents(box);
+
+}
+
+
+/* =========================================================
+   RECIPE CATEGORY SELECT
+========================================================= */
+
+function populateRecipeCategory(
+  selected
+){
+
+  $('recipeCategory').innerHTML =
+    CATEGORIES
+      .map(category => `
+
+        <option
+          value="${escapeAttr(category)}">
+
+          ${escapeHTML(category)}
+
+        </option>
+
+      `)
+      .join('');
+
+
+  $('recipeCategory').value =
+    selected ||
+    CATEGORIES[0];
+
+}
+
+
+/* =========================================================
+   NEW RECIPE
+========================================================= */
+
+function newRecipe(){
+
+  editingRecipeId =
+    null;
+
+
+  currentRecipePhoto =
+    '';
+
+
+  $('recipeListView')
+    .classList
+    .add('hidden');
+
+
+  $('recipeEditorView')
+    .classList
+    .remove('hidden');
+
+
+  $('recipeFormTitle')
+    .textContent =
+      'New Recipe';
+
+
+  $('recipeName').value =
+    '';
+
+
+  populateRecipeCategory(
+    'Soups'
+  );
+
+
+  $('recipeDescription').value =
+    '';
+
+
+  $('recipeYield').value =
+    '1';
+
+
+  $('recipeYieldUnit').value =
+    'portion';
+
+
+  $('pricingMethod').value =
+    'markup';
+
+
+  $('pricingValue').value =
+    '100';
+
+
+  $('recipeInstructions').value =
+    '';
+
+
+  $('recipePhoto').value =
+    '';
+
+
+  $('recipePhotoPreview')
+    .classList
+    .add('hidden');
+
+
+  $('recipePhotoPreview')
+    .removeAttribute('src');
+
+
+  $('recipeIngredients')
+    .innerHTML =
+      '';
+
+
+  addRecipeIngredientRow();
+
+
+  updatePricingLabel();
+
+  recalculateRecipe();
+
+  window.scrollTo(0,0);
+
+}
+
+
+/* =========================================================
+   EDIT RECIPE
+========================================================= */
+
+function openRecipeEditor(id){
+
+  const recipe =
+    recipeById(id);
+
+
+  if(!recipe){
+
+    return;
+
+  }
+
+
+  editingRecipeId =
+    id;
+
+
+  currentRecipePhoto =
+    recipe.photo || '';
+
+
+  $('recipeListView')
+    .classList
+    .add('hidden');
+
+
+  $('recipeEditorView')
+    .classList
+    .remove('hidden');
+
+
+  $('recipeFormTitle')
+    .textContent =
+      'Edit Recipe';
+
+
+  $('recipeName').value =
+    recipe.name || '';
+
+
+  populateRecipeCategory(
+    recipe.category ||
+    CATEGORIES[0]
+  );
+
+
+  $('recipeDescription').value =
+    recipe.description || '';
+
+
+  $('recipeYield').value =
+    recipe.yieldQty ??
+    1;
+
+
+  $('recipeYieldUnit').value =
+    recipe.yieldUnit ||
+    'portion';
+
+
+  $('pricingMethod').value =
+    recipe.pricingMethod ||
+    'markup';
+
+
+  $('pricingValue').value =
+    recipe.pricingValue ??
+    100;
+
+
+  $('recipeInstructions').value =
+    recipe.instructions ||
+    '';
+
+
+  $('recipePhoto').value =
+    '';
+
+
+  if(currentRecipePhoto){
+
+    $('recipePhotoPreview').src =
+      currentRecipePhoto;
+
+    $('recipePhotoPreview')
+      .classList
+      .remove('hidden');
+
+  }else{
+
+    $('recipePhotoPreview')
+      .classList
+      .add('hidden');
+
+    $('recipePhotoPreview')
+      .removeAttribute('src');
+
+  }
+
+
+  $('recipeIngredients')
+    .innerHTML =
+      '';
+
+
+  const rows =
+    Array.isArray(recipe.ingredients)
+      ? recipe.ingredients
+      : [];
+
+
+  if(rows.length === 0){
+
+    addRecipeIngredientRow();
+
+  }else{
+
+    rows.forEach(
+      row =>
+        addRecipeIngredientRow(row)
+    );
+
+  }
+
+
+  updatePricingLabel();
+
+  recalculateRecipe();
+
+  window.scrollTo(0,0);
+
+}
+
+
+/* =========================================================
+   CLOSE RECIPE
+========================================================= */
+
+function closeRecipeEditor(){
+
+  editingRecipeId =
+    null;
+
+
+  currentRecipePhoto =
+    '';
+
+
+  renderRecipesList();
+
+  window.scrollTo(0,0);
+
+}
+
+
+/* =========================================================
+   INGREDIENT OPTIONS
+========================================================= */
+
+function ingredientOptions(
+  selectedId
+){
+
+  let html =
+    '<option value="">Choose...</option>';
+
+
+  data.ingredients.forEach(
+    item => {
+
+      html += `
+
+        <option
+          value="${escapeAttr(item.id)}"
+          ${
+            String(item.id) ===
+            String(selectedId || '')
+              ? 'selected'
+              : ''
+          }>
+
+          ${escapeHTML(item.name)}
+
+        </option>
+
+      `;
+
+    }
+  );
+
+
+  return html;
+
+}
+
+
+/* =========================================================
+   ADD RECIPE INGREDIENT ROW
+========================================================= */
+
+function addRecipeIngredientRow(
+  existing
+){
+
+  const row =
+    document.createElement('div');
+
+
+  row.className =
+    'ingredient-row';
+
+
+  row.dataset.ingredientId =
+    existing?.ingredientId ||
+    '';
+
+
+  row.innerHTML = `
+
+    <div
+      class="ingredient-row-head">
+
 
       <div>
 
-        <label>Yield</label>
+        <label>
+          Ingredient
+        </label>
 
-        <input
-          id="recipeYield"
-          type="number"
-          step="any"
-          value="${escapeHTML(recipe.yield || 1)}">
+        <select
+          class="ri-ingredient">
 
-      </div>
-
-
-      <div>
-
-        <label>Yield Unit</label>
-
-        <input
-          id="recipeYieldUnit"
-          value="${escapeHTML(recipe.yunit || 'portion')}">
-
-      </div>
-
-    </div>
-
-
-    <h3>Ingredients</h3>
-
-    <div id="recipeRows"></div>
-
-
-    <button
-      class="light full"
-      id="addRecipeRow">
-      ➕ Add Ingredient
-    </button>
-
-
-    <h3>Pricing</h3>
-
-
-    <div class="grid2">
-
-      <div>
-
-        <label>Method</label>
-
-        <select id="recipeMode">
-
-          <option
-            value="markup"
-            ${
-              recipe.mode !== 'food'
-                ? 'selected'
-                : ''
-            }>
-            Markup %
-          </option>
-
-          <option
-            value="food"
-            ${
-              recipe.mode === 'food'
-                ? 'selected'
-                : ''
-            }>
-            Target Food Cost %
-          </option>
+          ${ingredientOptions(
+            existing?.ingredientId
+          )}
 
         </select>
 
@@ -2157,574 +3192,625 @@ function openRecipeEditor(recipe){
 
       <div>
 
-        <label id="markupLabel">
-
-          ${
-            recipe.mode === 'food'
-              ? 'Target Food Cost %'
-              : 'Markup %'
-          }
-
+        <label>
+          Qty
         </label>
 
         <input
-          id="recipeMarkup"
+          class="ri-qty"
           type="number"
-          step="0.1"
-          value="${escapeHTML(
-            recipe.markup ?? 100
-          )}">
+          min="0"
+          step="0.001"
+          value="${
+            escapeAttr(
+              existing?.qty ??
+              ''
+            )
+          }"
+          placeholder="0">
 
       </div>
+
+
+      <div>
+
+        <label>
+          Unit
+        </label>
+
+        <select class="ri-unit">
+
+          ${
+            UNITS
+              .map(unit => `
+
+                <option
+                  value="${escapeAttr(unit)}"
+                  ${
+                    normalizeUnit(
+                      existing?.unit ||
+                      'g'
+                    ) === unit
+                      ? 'selected'
+                      : ''
+                  }>
+
+                  ${escapeHTML(unit)}
+
+                </option>
+
+              `)
+              .join('')
+          }
+
+        </select>
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Cost
+        </label>
+
+        <div class="cost-box ri-cost">
+          —
+        </div>
+
+      </div>
+
+
+      <button
+        class="remove-row"
+        type="button"
+        aria-label="Remove ingredient">
+
+        ×
+
+      </button>
+
 
     </div>
 
 
     <div
-      id="costBox"
-      class="total">
-    </div>
-
-
-    <label>Instructions</label>
-
-    <textarea id="recipeInstructions">${escapeHTML(
-      recipe.instructions || ''
-    )}</textarea>
-
-
-    <div class="row">
-
-      <button
-        class="light"
-        id="cancelRecipe">
-        Cancel
-      </button>
-
-      <button
-        class="green"
-        id="saveRecipe">
-        Save Recipe
-      </button>
-
+      class="small muted ri-note"
+      style="margin-top:8px">
     </div>
 
   `;
 
 
-  el('recipeFile')
-    .addEventListener(
-      'change',
-      handleRecipePhoto
-    );
-
-
-  el('addRecipeRow')
-    .addEventListener(
-      'click',
-      function(){
-        addRecipeRow();
-      }
-    );
-
-
-  el('recipeMode')
-    .addEventListener(
-      'change',
-      updateRecipeCost
-    );
-
-
-  el('recipeMarkup')
-    .addEventListener(
-      'input',
-      updateRecipeCost
-    );
-
-
-  el('recipeYield')
-    .addEventListener(
-      'input',
-      updateRecipeCost
-    );
-
-
-  el('recipeYieldUnit')
-    .addEventListener(
-      'input',
-      updateRecipeCost
-    );
-
-
-  el('cancelRecipe')
-    .addEventListener(
-      'click',
-      closeRecipeEditor
-    );
-
-
-  el('saveRecipe')
-    .addEventListener(
-      'click',
-      saveRecipe
-    );
-
-
-  (
-    recipe.ingredients || []
-  ).forEach(
-    function(item){
-      addRecipeRow(item);
-    }
-  );
-
-
-  updateRecipeCost();
-
-}
-
-
-function addRecipeRow(item){
-
-  item = item || {
-
-    ingredientId:'',
-
-    qty:'',
-
-    unit:'g'
-
-  };
-
-
-  const row =
-    document.createElement('div');
-
-
-  row.className =
-    'ingrow';
-
-
-  const units = [
-    'g',
-    'kg',
-    'oz',
-    'lb',
-    'ml',
-    'l',
-    'each',
-    'dozen'
-  ];
-
-
-  row.innerHTML = `
-
-    <div>
-
-      <label>Ingredient</label>
-
-      <select class="recipeIngredient">
-
-        <option value="">
-          Choose...
-        </option>
-
-        ${data.ingredients.map(
-          function(ingredient){
-
-            return `
-              <option
-                value="${ingredient.id}"
-                ${
-                  item.ingredientId === ingredient.id
-                    ? 'selected'
-                    : ''
-                }>
-                ${escapeHTML(ingredient.name)}
-              </option>
-            `;
-
-          }
-        ).join('')}
-
-      </select>
-
-    </div>
-
-
-    <div>
-
-      <label>Qty</label>
-
-      <input
-        class="recipeQty"
-        type="number"
-        step="any"
-        value="${escapeHTML(item.qty || '')}">
-
-    </div>
-
-
-    <div>
-
-      <label>Unit</label>
-
-      <select class="recipeUnit">
-
-        ${units.map(
-          function(unit){
-
-            return `
-              <option
-                value="${unit}"
-                ${
-                  item.unit === unit
-                    ? 'selected'
-                    : ''
-                }>
-                ${unit}
-              </option>
-            `;
-
-          }
-        ).join('')}
-
-      </select>
-
-    </div>
-
-
-    <div>
-
-      <label>Cost</label>
-
-      <input
-        class="recipeCost"
-        readonly
-        value="$0.00">
-
-    </div>
-
-
-    <button
-      class="red removeRecipeRow"
-      type="button">
-      ✕
-    </button>
-
-  `;
-
-
-  el('recipeRows')
+  $('recipeIngredients')
     .appendChild(row);
 
 
-  row
-    .querySelector('.recipeIngredient')
-    .addEventListener(
-      'change',
-      updateRecipeCost
+  const ingredientSelect =
+    row.querySelector(
+      '.ri-ingredient'
     );
 
 
-  row
-    .querySelector('.recipeQty')
+  const qtyInput =
+    row.querySelector(
+      '.ri-qty'
+    );
+
+
+  const unitSelect =
+    row.querySelector(
+      '.ri-unit'
+    );
+
+
+  const removeButton =
+    row.querySelector(
+      '.remove-row'
+    );
+
+
+  ingredientSelect
+    .addEventListener(
+      'change',
+      () => {
+
+        row.dataset.ingredientId =
+          ingredientSelect.value;
+
+        updateRecipeIngredientRow(row);
+
+        recalculateRecipe();
+
+      }
+    );
+
+
+  qtyInput
     .addEventListener(
       'input',
-      updateRecipeCost
+      () => {
+
+        updateRecipeIngredientRow(row);
+
+        recalculateRecipe();
+
+      }
     );
 
 
-  row
-    .querySelector('.recipeUnit')
+  unitSelect
     .addEventListener(
       'change',
-      updateRecipeCost
+      () => {
+
+        updateRecipeIngredientRow(row);
+
+        recalculateRecipe();
+
+      }
     );
 
 
-  row
-    .querySelector('.removeRecipeRow')
+  removeButton
     .addEventListener(
       'click',
-      function(){
+      () => {
 
         row.remove();
 
-        updateRecipeCost();
+
+        if(
+          $('recipeIngredients')
+            .children
+            .length === 0
+        ){
+
+          addRecipeIngredientRow();
+
+        }
+
+
+        recalculateRecipe();
 
       }
     );
 
 
-  updateRecipeCost();
+  updateRecipeIngredientRow(row);
 
 }
 
 
-function collectRecipeIngredients(){
+/* =========================================================
+   UPDATE INDIVIDUAL RECIPE INGREDIENT
+========================================================= */
 
-  return Array
-    .from(
-      el('recipeRows')
-        .querySelectorAll('.ingrow')
-    )
-    .map(
-      function(row){
+function updateRecipeIngredientRow(
+  row
+){
 
-        return {
+  const ingredientId =
+    row
+      .querySelector(
+        '.ri-ingredient'
+      )
+      .value;
 
-          ingredientId:
-            row
-              .querySelector(
-                '.recipeIngredient'
-              )
-              .value,
 
-          qty:
-            Number(
-              row
-                .querySelector(
-                  '.recipeQty'
-                )
-                .value
-            ) || 0,
-
-          unit:
-            row
-              .querySelector(
-                '.recipeUnit'
-              )
-              .value
-
-        };
-
-      }
-    )
-    .filter(
-      function(item){
-
-        return (
-          item.ingredientId &&
-          item.qty > 0
-        );
-
-      }
+  const qty =
+    Number(
+      row
+        .querySelector(
+          '.ri-qty'
+        )
+        .value
     );
 
-}
+
+  const unit =
+    row
+      .querySelector(
+        '.ri-unit'
+      )
+      .value;
 
 
-function updateRecipeCost(){
+  const ingredient =
+    ingredientById(
+      ingredientId
+    );
 
-  if(!el('recipeRows')){
+
+  const costBox =
+    row.querySelector(
+      '.ri-cost'
+    );
+
+
+  const note =
+    row.querySelector(
+      '.ri-note'
+    );
+
+
+  if(!ingredient){
+
+    costBox.textContent =
+      '—';
+
+    note.textContent =
+      '';
+
     return;
+
   }
 
 
-  document
-    .querySelectorAll(
-      '#recipeRows .ingrow'
+  if(
+    !Number.isFinite(qty) ||
+    qty <= 0
+  ){
+
+    costBox.textContent =
+      '—';
+
+    note.textContent =
+      `Purchase: ${
+        ingredient.qty
+      } ${
+        ingredient.unit
+      } for ${
+        money(ingredient.price)
+      }`;
+
+    return;
+
+  }
+
+
+  const cost =
+    calculateIngredientCost(
+      ingredient,
+      qty,
+      unit
+    );
+
+
+  if(cost === null){
+
+    costBox.textContent =
+      '—';
+
+
+    note.textContent =
+
+      `Cannot convert ${
+        unit
+      } to purchase unit ${
+        ingredient.unit
+      }. Use compatible units.`;
+
+    return;
+
+  }
+
+
+  costBox.textContent =
+    money(cost);
+
+
+  note.textContent =
+
+    `Purchase: ${
+      ingredient.qty
+    } ${
+      ingredient.unit
+    } = ${
+      money(ingredient.price)
+    } • Using ${
+      qty
+    } ${
+      unit
+    }`;
+
+}
+
+
+/* =========================================================
+   TOTAL RECIPE COST
+========================================================= */
+
+function calculateRecipeTotal(
+  recipe
+){
+
+  if(
+    !recipe ||
+    !Array.isArray(
+      recipe.ingredients
     )
-    .forEach(
-      function(row){
+  ){
+
+    return 0;
+
+  }
+
+
+  return recipe.ingredients
+    .reduce(
+      (
+        total,
+        row
+      ) => {
 
         const ingredient =
-          findIngredient(
-            row
-              .querySelector(
-                '.recipeIngredient'
-              )
-              .value
+          ingredientById(
+            row.ingredientId
           );
 
 
         const cost =
-          getIngredientCost(
+          calculateIngredientCost(
             ingredient,
-
-            Number(
-              row
-                .querySelector(
-                  '.recipeQty'
-                )
-                .value
-            ) || 0,
-
-            row
-              .querySelector(
-                '.recipeUnit'
-              )
-              .value
+            Number(row.qty),
+            row.unit
           );
 
 
-        row
-          .querySelector(
-            '.recipeCost'
-          )
-          .value =
-            cost === null
-              ? '—'
-              : money(cost);
+        if(cost === null){
 
-      }
+          return total;
+
+        }
+
+
+        return total + cost;
+
+      },
+      0
     );
-
-
-  const temporaryRecipe = {
-
-    ingredients:
-      collectRecipeIngredients(),
-
-    yield:
-      Number(
-        el('recipeYield').value
-      ) || 1,
-
-    mode:
-      el('recipeMode').value,
-
-    markup:
-      Number(
-        el('recipeMarkup').value
-      ) || 0
-
-  };
-
-
-  const cost =
-    calculateRecipe(
-      temporaryRecipe
-    );
-
-
-  el('markupLabel').textContent =
-    el('recipeMode').value === 'food'
-      ? 'Target Food Cost %'
-      : 'Markup %';
-
-
-  const unit =
-    el('recipeYieldUnit').value ||
-    'portion';
-
-
-  el('costBox').innerHTML = `
-
-    <div>
-
-      <span>
-        Total recipe cost
-      </span>
-
-      <b>
-        ${money(cost.total)}
-      </b>
-
-    </div>
-
-
-    <div>
-
-      <span>
-        Cost / ${escapeHTML(unit)}
-      </span>
-
-      <b>
-        ${money(cost.per)}
-      </b>
-
-    </div>
-
-
-    <div>
-
-      <span>
-        Selling price / ${escapeHTML(unit)}
-      </span>
-
-      <b class="big">
-        ${money(cost.sell)}
-      </b>
-
-    </div>
-
-
-    <div>
-
-      <span>
-        Food cost %
-      </span>
-
-      <b>
-        ${cost.food.toFixed(1)}%
-      </b>
-
-    </div>
-
-
-    ${
-      cost.missing
-        ? `
-          <div class="notice">
-            ${cost.missing}
-            ingredient(s) could not be costed
-            because their units do not match.
-          </div>
-        `
-        : ''
-    }
-
-  `;
 
 }
 
 
-function handleRecipePhoto(event){
+/* =========================================================
+   SELLING PRICE
+========================================================= */
 
-  const file =
-    event.target.files[0];
+function calculateSellingPrice(
+  portionCost,
+  method,
+  value
+){
+
+  const cost =
+    Number(portionCost);
 
 
-  if(!file){
-    return;
+  const v =
+    Number(value);
+
+
+  if(
+    !Number.isFinite(cost) ||
+    cost < 0 ||
+    !Number.isFinite(v) ||
+    v <= 0
+  ){
+
+    return 0;
+
   }
 
 
-  const reader =
-    new FileReader();
+  if(method === 'foodcost'){
+
+    return cost / (v / 100);
+
+  }
 
 
-  reader.onload =
-    function(){
-
-      el('recipePhotoData')
-        .value =
-        reader.result;
-
-
-      el('recipePreview')
-        .src =
-        reader.result;
-
-
-      el('recipePreview')
-        .classList
-        .remove('hidden');
-
-    };
-
-
-  reader.readAsDataURL(file);
+  return cost *
+    (1 + v / 100);
 
 }
 
+
+/* =========================================================
+   FOOD COST %
+========================================================= */
+
+function calculateFoodCostPercent(
+  portionCost,
+  sellingPrice
+){
+
+  if(
+    !sellingPrice ||
+    sellingPrice <= 0
+  ){
+
+    return 0;
+
+  }
+
+
+  return (
+    portionCost /
+    sellingPrice
+  ) * 100;
+
+}
+
+
+/* =========================================================
+   LIVE RECIPE CALCULATION
+========================================================= */
+
+function recalculateRecipe(){
+
+  const rows =
+    [
+      ...$('recipeIngredients')
+        .querySelectorAll(
+          '.ingredient-row'
+        )
+    ];
+
+
+  let total = 0;
+
+
+  rows.forEach(row => {
+
+    updateRecipeIngredientRow(row);
+
+
+    const ingredient =
+      ingredientById(
+        row
+          .querySelector(
+            '.ri-ingredient'
+          )
+          .value
+      );
+
+
+    const qty =
+      Number(
+        row
+          .querySelector(
+            '.ri-qty'
+          )
+          .value
+      );
+
+
+    const unit =
+      row
+        .querySelector(
+          '.ri-unit'
+        )
+        .value;
+
+
+    const cost =
+      calculateIngredientCost(
+        ingredient,
+        qty,
+        unit
+      );
+
+
+    if(cost !== null){
+
+      total += cost;
+
+    }
+
+  });
+
+
+  const yieldQty =
+    Number(
+      $('recipeYield').value
+    );
+
+
+  const safeYield =
+    Number.isFinite(yieldQty) &&
+    yieldQty > 0
+      ? yieldQty
+      : 1;
+
+
+  const portionCost =
+    total / safeYield;
+
+
+  const method =
+    $('pricingMethod').value;
+
+
+  const pricingValue =
+    Number(
+      $('pricingValue').value
+    );
+
+
+  const sellingPrice =
+    calculateSellingPrice(
+      portionCost,
+      method,
+      pricingValue
+    );
+
+
+  const foodCostPercent =
+    calculateFoodCostPercent(
+      portionCost,
+      sellingPrice
+    );
+
+
+  $('recipeTotalCost')
+    .textContent =
+      money(total);
+
+
+  $('recipePortionCost')
+    .textContent =
+      money(portionCost);
+
+
+  $('recipeSellingPrice')
+    .textContent =
+      money(sellingPrice);
+
+
+  $('recipeFoodCostPercent')
+    .textContent =
+      foodCostPercent
+        .toFixed(1) + '%';
+
+}
+
+
+/* =========================================================
+   PRICING LABEL
+========================================================= */
+
+function updatePricingLabel(){
+
+  if(
+    $('pricingMethod').value ===
+    'foodcost'
+  ){
+
+    $('pricingValueLabel')
+      .textContent =
+        'Target Food Cost %';
+
+  }else{
+
+    $('pricingValueLabel')
+      .textContent =
+        'Markup %';
+
+  }
+
+}
+
+
+/* =========================================================
+   SAVE RECIPE
+========================================================= */
 
 function saveRecipe(){
 
   const name =
-    el('recipeName')
+    $('recipeName')
       .value
       .trim();
 
@@ -2732,462 +3818,423 @@ function saveRecipe(){
   if(!name){
 
     alert(
-      'Enter a recipe name.'
+      'Please enter a recipe name.'
     );
 
     return;
 
   }
+
+
+  const yieldQty =
+    Number(
+      $('recipeYield').value
+    );
+
+
+  if(
+    !Number.isFinite(yieldQty) ||
+    yieldQty <= 0
+  ){
+
+    alert(
+      'Please enter a valid recipe yield.'
+    );
+
+    return;
+
+  }
+
+
+  const rows =
+    [
+      ...$('recipeIngredients')
+        .querySelectorAll(
+          '.ingredient-row'
+        )
+    ];
+
+
+  const ingredients = [];
+
+
+  rows.forEach(row => {
+
+    const ingredientId =
+      row
+        .querySelector(
+          '.ri-ingredient'
+        )
+        .value;
+
+
+    const qty =
+      Number(
+        row
+          .querySelector(
+            '.ri-qty'
+          )
+          .value
+      );
+
+
+    const unit =
+      normalizeUnit(
+        row
+          .querySelector(
+            '.ri-unit'
+          )
+          .value
+      );
+
+
+    if(
+      ingredientId &&
+      Number.isFinite(qty) &&
+      qty > 0
+    ){
+
+      ingredients.push({
+
+        ingredientId,
+
+        qty,
+
+        unit
+
+      });
+
+    }
+
+  });
 
 
   const recipe = {
 
     id:
-      editingRecipeId === 'new'
-        ? newId()
-        : editingRecipeId,
+      editingRecipeId ||
+      makeId(),
 
-    name:name,
+    name,
 
     category:
-      el('recipeCategory').value,
+      $('recipeCategory').value,
 
     description:
-      el('recipeDescription').value,
+      $('recipeDescription')
+        .value
+        .trim(),
 
     photo:
-      el('recipePhotoData').value,
+      currentRecipePhoto || '',
 
-    yield:
-      Number(
-        el('recipeYield').value
-      ) || 1,
+    yieldQty,
 
-    yunit:
-      el('recipeYieldUnit').value ||
+    yieldUnit:
+      $('recipeYieldUnit')
+        .value
+        .trim() ||
       'portion',
 
-    mode:
-      el('recipeMode').value,
+    pricingMethod:
+      $('pricingMethod')
+        .value,
 
-    markup:
+    pricingValue:
       Number(
-        el('recipeMarkup').value
-      ) || 0,
+        $('pricingValue').value
+      ) || 100,
 
-    ingredients:
-      collectRecipeIngredients(),
+    ingredients,
 
     instructions:
-      el('recipeInstructions').value,
+      $('recipeInstructions')
+        .value
+        .trim(),
 
-    updated:
+    updatedAt:
       new Date().toISOString()
 
   };
 
 
-  const index =
-    data.recipes.findIndex(
-      function(existing){
-        return existing.id === recipe.id;
-      }
-    );
+  if(editingRecipeId){
+
+    const index =
+      data.recipes.findIndex(
+        x =>
+          String(x.id) ===
+          String(editingRecipeId)
+      );
 
 
-  if(index === -1){
+    if(index >= 0){
 
-    data.recipes.push(recipe);
+      data.recipes[index] =
+        recipe;
+
+    }
 
   }else{
 
-    data.recipes[index] =
-      recipe;
+    data.recipes.push(
+      recipe
+    );
 
   }
 
 
   saveData();
+
+
+  alert(
+    'Recipe saved successfully.'
+  );
+
 
   closeRecipeEditor();
 
   renderHome();
 
-  renderRecipes();
-
 }
 
 
-function closeRecipeEditor(){
-
-  editingRecipeId = null;
-
-
-  el('reditor')
-    .classList
-    .add('hidden');
-
-
-  el('rlistview')
-    .classList
-    .remove('hidden');
-
-}
-
+/* =========================================================
+   DELETE RECIPE
+========================================================= */
 
 function deleteRecipe(id){
 
+  const recipe =
+    recipeById(id);
+
+
+  if(!recipe){
+
+    return;
+
+  }
+
+
   if(
     !confirm(
-      'Delete this recipe?'
+      `Delete "${recipe.name}"?`
     )
   ){
+
     return;
+
   }
 
 
   data.recipes =
     data.recipes.filter(
-      function(recipe){
-        return recipe.id !== id;
-      }
+      x =>
+        String(x.id) !==
+        String(id)
     );
 
 
   saveData();
 
-  renderRecipes();
+
+  renderRecipesList();
 
   renderHome();
 
 }
 
 
-/* =========================
-   INVOICE SCANNER
-========================= */
+/* =========================================================
+   RECIPE PHOTO
+========================================================= */
 
-function renderScanForm(){
-
-  el('scanform').innerHTML = `
-
-    <div class="grid2">
-
-      <div>
-
-        <label>Ingredient *</label>
-
-        <input id="scanName">
-
-      </div>
-
-
-      <div>
-
-        <label>Supplier</label>
-
-        <input id="scanSupplier">
-
-      </div>
-
-    </div>
-
-
-    <div class="grid2">
-
-      <div>
-
-        <label>Quantity *</label>
-
-        <input
-          id="scanQty"
-          type="number"
-          step="any">
-
-      </div>
-
-
-      <div>
-
-        <label>Unit *</label>
-
-        <select id="scanUnit">
-
-          ${
-            [
-              'kg',
-              'g',
-              'lb',
-              'oz',
-              'l',
-              'ml',
-              'each',
-              'dozen'
-            ].map(
-              function(unit){
-
-                return `
-                  <option value="${unit}">
-                    ${unit}
-                  </option>
-                `;
-
-              }
-            ).join('')
-          }
-
-        </select>
-
-      </div>
-
-    </div>
-
-
-    <label>Verified Price *</label>
-
-    <input
-      id="scanPrice"
-      type="number"
-      step="0.01">
-
-
-    <button
-      class="green full"
-      id="saveScan">
-      Save Ingredient Price
-    </button>
-
-  `;
-
-
-  el('saveScan')
-    .addEventListener(
-      'click',
-      saveScannedIngredient
-    );
-
-}
-
-
-function previewInvoice(event){
-
-  const file =
-    event.target.files[0];
-
-
-  if(!file){
-    return;
-  }
-
-
-  const reader =
-    new FileReader();
-
-
-  reader.onload =
+$('recipePhoto')
+  .addEventListener(
+    'change',
     function(){
 
-      el('ipreview')
-        .src =
-        reader.result;
+      const file =
+        this.files &&
+        this.files[0];
 
 
-      el('ipreview')
+      if(!file){
+
+        return;
+
+      }
+
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload =
+        function(event){
+
+          currentRecipePhoto =
+            event.target.result;
+
+
+          $('recipePhotoPreview')
+            .src =
+              currentRecipePhoto;
+
+
+          $('recipePhotoPreview')
+            .classList
+            .remove('hidden');
+
+        };
+
+
+      reader.readAsDataURL(file);
+
+    }
+  );
+
+
+/* =========================================================
+   INVOICE OCR
+========================================================= */
+
+$('scanInvoiceBtn')
+  .addEventListener(
+    'click',
+    async function(){
+
+      const file =
+        $('invoicePhoto')
+          .files[0];
+
+
+      if(!file){
+
+        alert(
+          'Please take a photo or choose an invoice image first.'
+        );
+
+        return;
+
+      }
+
+
+      if(
+        typeof Tesseract ===
+        'undefined'
+      ){
+
+        alert(
+          'OCR is not available. Check your internet connection.'
+        );
+
+        return;
+
+      }
+
+
+      $('ocrProgress')
         .classList
         .remove('hidden');
 
 
-      el('ocrbtn').disabled =
-        false;
+      $('ocrProgress')
+        .textContent =
+          'Reading invoice...';
 
-    };
 
+      $('ocrText')
+        .textContent =
+          'Working...';
 
-  reader.readAsDataURL(file);
 
-}
+      try{
 
+        const result =
+          await Tesseract.recognize(
+            file,
+            'eng',
+            {
 
-async function readInvoice(){
+              logger:
+                message => {
 
-  const file =
-    el('invoice').files[0];
+                  if(
+                    message &&
+                    message.status
+                  ){
 
+                    const percent =
+                      message.progress
+                        ? Math.round(
+                            message.progress *
+                            100
+                          )
+                        : '';
 
-  if(!file){
-    return;
-  }
 
+                    $('ocrProgress')
+                      .textContent =
+                        message.status +
+                        (
+                          percent
+                            ? ' ' +
+                              percent +
+                              '%'
+                            : ''
+                        );
 
-  if(
-    typeof Tesseract ===
-    'undefined'
-  ){
+                  }
 
-    el('ocrstatus').textContent =
-      'OCR could not load. Enter the invoice manually.';
+                }
 
-    return;
+            }
+          );
 
-  }
 
+        $('ocrText')
+          .textContent =
+            result.data.text ||
+            'No text found.';
 
-  el('ocrbtn').disabled =
-    true;
 
+        $('ocrProgress')
+          .textContent =
+            'Scan complete. Verify the information before entering prices.';
 
-  el('ocrstatus').textContent =
-    'Reading invoice...';
 
+      }catch(error){
 
-  try{
+        console.error(error);
 
-    const result =
-      await Tesseract.recognize(
-        file,
-        'eng',
-        {
-          logger:function(message){
 
-            el('ocrstatus')
-              .textContent =
-              message.status ||
-              'Reading...';
+        $('ocrText')
+          .textContent =
+            'Unable to read this invoice.';
 
-          }
-        }
-      );
 
+        $('ocrProgress')
+          .textContent =
+            'OCR failed. Try a clearer photo.';
 
-    el('ocrtext').value =
-      result.data.text || '';
+      }
 
-
-    el('ocrstatus').textContent =
-      'Done — verify the information before saving.';
-
-
-  }catch(error){
-
-    console.error(error);
-
-    el('ocrstatus').textContent =
-      'Could not read invoice. Enter the information manually.';
-
-  }
-
-
-  el('ocrbtn').disabled =
-    false;
-
-}
-
-
-function saveScannedIngredient(){
-
-  const name =
-    el('scanName')
-      .value
-      .trim();
-
-
-  const quantity =
-    Number(
-      el('scanQty').value
-    );
-
-
-  const price =
-    Number(
-      el('scanPrice').value
-    );
-
-
-  if(
-    !name ||
-    !Number.isFinite(quantity) ||
-    quantity <= 0 ||
-    !Number.isFinite(price) ||
-    price < 0
-  ){
-
-    alert(
-      'Enter ingredient, quantity and verified price.'
-    );
-
-    return;
-
-  }
-
-
-  data.ingredients.push({
-
-    id:newId(),
-
-    name:name,
-
-    category:'',
-
-    supplier:
-      el('scanSupplier')
-        .value
-        .trim(),
-
-    qty:quantity,
-
-    unit:
-      el('scanUnit').value,
-
-    price:price,
-
-    date:
-      new Date()
-        .toISOString()
-        .slice(0,10),
-
-    notes:
-      'Invoice photo/OCR entry'
-
-  });
-
-
-  saveData();
-
-
-  el('scanName').value = '';
-
-  el('scanSupplier').value = '';
-
-  el('scanQty').value = '';
-
-  el('scanPrice').value = '';
-
-
-  renderHome();
-
-  renderIngredients();
-
-  renderRecipes();
-
-
-  alert(
-    'Ingredient saved.'
+    }
   );
 
-}
 
-
-/* =========================
+/* =========================================================
    BACKUP
-========================= */
+========================================================= */
 
 function exportBackup(){
 
   const backup = {
 
-    version:1,
+    version:2,
 
-    exported:
+    exportedAt:
       new Date().toISOString(),
 
     ingredients:
@@ -3209,7 +4256,8 @@ function exportBackup(){
         )
       ],
       {
-        type:'application/json'
+        type:
+          'application/json'
       }
     );
 
@@ -3222,123 +4270,173 @@ function exportBackup(){
     document.createElement('a');
 
 
-  link.href = url;
+  link.href =
+    url;
+
 
   link.download =
     'kitchen-costing-backup.json';
 
 
-  document.body.appendChild(link);
+  document.body.appendChild(
+    link
+  );
+
 
   link.click();
+
 
   link.remove();
 
 
-  setTimeout(
-    function(){
-
-      URL.revokeObjectURL(url);
-
-    },
-    500
-  );
+  URL.revokeObjectURL(url);
 
 }
 
 
-function importBackup(event){
+/* =========================================================
+   IMPORT
+========================================================= */
 
-  const file =
-    event.target.files[0];
-
-
-  if(!file){
-    return;
-  }
-
-
-  const reader =
-    new FileReader();
+$('importBtn')
+  .addEventListener(
+    'click',
+    () =>
+      $('importFile').click()
+  );
 
 
-  reader.onload =
+$('importFile')
+  .addEventListener(
+    'change',
     function(){
 
-      try{
-
-        const imported =
-          JSON.parse(
-            reader.result
-          );
+      const file =
+        this.files &&
+        this.files[0];
 
 
-        if(
-          !Array.isArray(
-            imported.ingredients
-          ) ||
-          !Array.isArray(
-            imported.recipes
-          )
-        ){
+      if(!file){
 
-          throw new Error(
-            'Invalid backup'
-          );
+        return;
 
-        }
+      }
 
 
-        data = {
+      const reader =
+        new FileReader();
 
-          ingredients:
-            imported.ingredients,
 
-          recipes:
-            imported.recipes
+      reader.onload =
+        function(event){
+
+          try{
+
+            const imported =
+              JSON.parse(
+                event.target.result
+              );
+
+
+            if(
+              !Array.isArray(
+                imported.ingredients
+              ) ||
+              !Array.isArray(
+                imported.recipes
+              )
+            ){
+
+              throw new Error(
+                'Invalid backup'
+              );
+
+            }
+
+
+            if(
+              !confirm(
+                'Import this backup? Your current ingredients and recipes will be replaced.'
+              )
+            ){
+
+              return;
+
+            }
+
+
+            data = {
+
+              ingredients:
+                imported.ingredients,
+
+              recipes:
+                imported.recipes
+
+            };
+
+
+            saveData();
+
+
+            renderHome();
+
+            renderIngredients();
+
+            renderRecipesList();
+
+
+            alert(
+              'Backup imported successfully.'
+            );
+
+
+            showPage('home');
+
+
+          }catch(error){
+
+            console.error(error);
+
+
+            alert(
+              'That file is not a valid Kitchen Costing backup.'
+            );
+
+          }
 
         };
 
 
-        saveData();
-
-        renderHome();
-
-        renderIngredients();
-
-        renderRecipes();
+      reader.readAsText(file);
 
 
-        alert(
-          'Backup imported successfully.'
-        );
+      this.value = '';
+
+    }
+  );
 
 
-      }catch(error){
-
-        console.error(error);
-
-        alert(
-          'This is not a valid Kitchen Costing backup.'
-        );
-
-      }
-
-    };
-
-
-  reader.readAsText(file);
-
-  event.target.value = '';
-
-}
-
+/* =========================================================
+   DELETE ALL
+========================================================= */
 
 function deleteAllData(){
 
   if(
     !confirm(
-      'Delete ALL recipes and ingredients? This cannot be undone unless you have a backup.'
+      'Delete ALL ingredients and recipes? This cannot be undone unless you have a backup.'
+    )
+  ){
+
+    return;
+
+  }
+
+
+  if(
+    !confirm(
+      'Are you absolutely sure?'
     )
   ){
 
@@ -3358,277 +4456,213 @@ function deleteAllData(){
 
   saveData();
 
+
   renderHome();
 
   renderIngredients();
 
-  renderRecipes();
+  renderRecipesList();
 
 
   alert(
-    'All data has been deleted.'
+    'All data deleted.'
   );
 
 }
 
 
-/* =========================
-   EVENTS
-========================= */
+/* =========================================================
+   NAVIGATION BUTTONS
+========================================================= */
 
-function setupEvents(){
+$('navHome')
+  .addEventListener(
+    'click',
+    () => showPage('home')
+  );
 
-  /* Navigation */
 
-  el('nh')
-    .addEventListener(
-      'click',
-      function(){
-        showPage('home');
-      }
-    );
+$('navIngredients')
+  .addEventListener(
+    'click',
+    () => showPage('ingredients')
+  );
 
 
-  el('niav')
-    .addEventListener(
-      'click',
-      function(){
-        showPage('ingredients');
-      }
-    );
+$('navRecipes')
+  .addEventListener(
+    'click',
+    () => showPage('recipes')
+  );
 
 
-  el('nrav')
-    .addEventListener(
-      'click',
-      function(){
-        showPage('recipes');
-      }
-    );
+$('navInvoice')
+  .addEventListener(
+    'click',
+    () => showPage('invoice')
+  );
 
 
-  el('nsc')
-    .addEventListener(
-      'click',
-      function(){
-        showPage('scan');
-      }
-    );
+$('navSettings')
+  .addEventListener(
+    'click',
+    () => showPage('settings')
+  );
 
 
-  el('nset')
-    .addEventListener(
-      'click',
-      function(){
-        showPage('settings');
-      }
-    );
+/* =========================================================
+   HOME BUTTONS
+========================================================= */
 
+$('homeNewIngredient')
+  .addEventListener(
+    'click',
+    () => {
 
-  /* Quick actions */
-
-  el('quickIngredient')
-    .addEventListener(
-      'click',
-      function(){
-
-        showPage('ingredients');
-
-        openIngredientForm();
-
-      }
-    );
-
-
-  el('quickRecipe')
-    .addEventListener(
-      'click',
-      function(){
-
-        showPage('recipes');
-
-        newRecipe();
-
-      }
-    );
-
-
-  el('quickScan')
-    .addEventListener(
-      'click',
-      function(){
-        showPage('scan');
-      }
-    );
-
-
-  el('quickSettings')
-    .addEventListener(
-      'click',
-      function(){
-        showPage('settings');
-      }
-    );
-
-
-  /* Ingredients */
-
-  el('addIngredientBtn')
-    .addEventListener(
-      'click',
-      function(){
-        openIngredientForm();
-      }
-    );
-
-
-  el('isearch')
-    .addEventListener(
-      'input',
-      renderIngredients
-    );
-
-
-  /* Recipes */
-
-  el('newRecipeBtn')
-    .addEventListener(
-      'click',
-      newRecipe
-    );
-
-
-  el('rsearch')
-    .addEventListener(
-      'input',
-      renderRecipes
-    );
-
-
-  document
-    .querySelectorAll('.filterBtn')
-    .forEach(
-      function(button){
-
-        button.addEventListener(
-          'click',
-          function(){
-
-            currentFilter =
-              button.dataset.filter;
-
-            renderRecipes();
-
-          }
-        );
-
-      }
-    );
-
-
-  /* Invoice */
-
-  el('invoice')
-    .addEventListener(
-      'change',
-      previewInvoice
-    );
-
-
-  el('ocrbtn')
-    .addEventListener(
-      'click',
-      readInvoice
-    );
-
-
-  /* Settings */
-
-  el('exportBtn')
-    .addEventListener(
-      'click',
-      exportBackup
-    );
-
-
-  el('importFile')
-    .addEventListener(
-      'change',
-      importBackup
-    );
-
-
-  el('clearBtn')
-    .addEventListener(
-      'click',
-      deleteAllData
-    );
-
-}
-
-
-/* =========================
-   START
-========================= */
-
-function startApp(){
-
-  setupEvents();
-
-  renderHome();
-
-  renderIngredients();
-
-  renderRecipes();
-
-  renderScanForm();
-
-
-  /*
-    Register service worker.
-    The updated sw.js should use
-    a new cache version.
-  */
-
-  if(
-    'serviceWorker' in navigator
-  ){
-
-    navigator.serviceWorker
-      .register('./sw.js')
-      .catch(
-        function(error){
-
-          console.log(
-            'Service worker registration failed:',
-            error
-          );
-
-        }
+      showPage(
+        'ingredients'
       );
 
-  }
+      openIngredientForm();
 
-}
-
-
-if(
-  document.readyState ===
-  'loading'
-){
-
-  document.addEventListener(
-    'DOMContentLoaded',
-    startApp
+    }
   );
 
-}else{
 
-  startApp();
+$('homeNewRecipe')
+  .addEventListener(
+    'click',
+    () => {
 
-}
+      showPage(
+        'recipes'
+      );
 
-</script>
+      newRecipe();
 
-</body>
-</html>
+    }
+  );
+
+
+$('homeInvoice')
+  .addEventListener(
+    'click',
+    () =>
+      showPage('invoice')
+  );
+
+
+$('homeBackup')
+  .addEventListener(
+    'click',
+    exportBackup
+  );
+
+
+/* =========================================================
+   INGREDIENT BUTTONS
+========================================================= */
+
+$('newIngredientBtn')
+  .addEventListener(
+    'click',
+    () =>
+      openIngredientForm()
+  );
+
+
+$('saveIngredientBtn')
+  .addEventListener(
+    'click',
+    saveIngredient
+  );
+
+
+$('cancelIngredientBtn')
+  .addEventListener(
+    'click',
+    closeIngredientForm
+  );
+
+
+/* =========================================================
+   RECIPE BUTTONS
+========================================================= */
+
+$('newRecipeBtn')
+  .addEventListener(
+    'click',
+    newRecipe
+  );
+
+
+$('backToRecipesBtn')
+  .addEventListener(
+    'click',
+    closeRecipeEditor
+  );
+
+
+$('saveRecipeBtn')
+  .addEventListener(
+    'click',
+    saveRecipe
+  );
+
+
+$('addRecipeIngredientBtn')
+  .addEventListener(
+    'click',
+    () => {
+
+      addRecipeIngredientRow();
+
+      recalculateRecipe();
+
+    }
+  );
+
+
+/* =========================================================
+   PRICING INPUTS
+========================================================= */
+
+$('pricingMethod')
+  .addEventListener(
+    'change',
+    () => {
+
+      updatePricingLabel();
+
+      recalculateRecipe();
+
+    }
+  );
+
+
+$('pricingValue')
+  .addEventListener(
+    'input',
+    recalculateRecipe
+  );
+
+
+$('recipeYield')
+  .addEventListener(
+    'input',
+    recalculateRecipe
+  );
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+$('exportBtn')
+  .addEventListener(
+    'click',
+    exportBackup
+  );
+
+
+$('deleteAllBtn
