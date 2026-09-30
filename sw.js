@@ -1,131 +1,80 @@
-const CACHE = 'kitchen-costing-v2';
+/*
+  Kitchen Costing cache reset.
 
-const CORE_FILES = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon.svg'
-];
+  The current Kitchen Costing app does NOT use
+  a service worker for normal operation.
 
-
-/* INSTALL */
+  This file exists to remove any old service
+  worker/cache left behind by previous versions.
+*/
 
 self.addEventListener('install', event => {
 
-  event.waitUntil(
-
-    caches
-      .open(CACHE)
-      .then(cache => cache.addAll(CORE_FILES))
-      .then(() => self.skipWaiting())
-
-  );
+  self.skipWaiting();
 
 });
 
-
-/* ACTIVATE */
 
 self.addEventListener('activate', event => {
 
   event.waitUntil(
 
-    caches
-      .keys()
-      .then(keys => {
+    (async () => {
 
-        return Promise.all(
+      /* Delete every old cache */
 
-          keys
-            .filter(key => key !== CACHE)
-            .map(key => caches.delete(key))
+      const keys =
+        await caches.keys();
 
+      await Promise.all(
+        keys.map(
+          key =>
+            caches.delete(key)
+        )
+      );
+
+
+      /* Remove this service worker */
+
+      await self.registration.unregister();
+
+
+      /* Reload any open Kitchen Costing pages */
+
+      const clients =
+        await self.clients.matchAll({
+          type:'window'
+        });
+
+
+      clients.forEach(client => {
+
+        client.navigate(
+          client.url
         );
 
-      })
-      .then(() => self.clients.claim())
+      });
+
+    })()
 
   );
 
 });
 
 
-/* FETCH */
+self.addEventListener(
+  'fetch',
+  event => {
 
-self.addEventListener('fetch', event => {
-
-  const request = event.request;
-
-
-  /*
-    For page navigation:
-    ALWAYS try the newest online version first.
-
-    This prevents the old broken index.html
-    from remaining stuck in the installed app.
-  */
-
-  if (request.mode === 'navigate') {
+    /*
+      Do not cache anything.
+      Always get the current file
+      from GitHub Pages.
+    */
 
     event.respondWith(
-
-      fetch(request)
-
-        .then(response => {
-
-          const copy = response.clone();
-
-          caches
-            .open(CACHE)
-            .then(cache => {
-
-              cache.put(
-                './index.html',
-                copy
-              );
-
-            });
-
-          return response;
-
-        })
-
-        .catch(() => {
-
-          return caches.match(
-            './index.html'
-          );
-
-        })
-
+      fetch(event.request)
     );
 
-    return;
   }
-
-
-  /*
-    For other files:
-    use the cached version when available,
-    otherwise go to the network.
-  */
-
-  event.respondWith(
-
-    caches
-      .match(request)
-      .then(cachedResponse => {
-
-        if (cachedResponse) {
-
-          return cachedResponse;
-
-        }
-
-        return fetch(request);
-
-      })
-
-  );
-
-});
+);
