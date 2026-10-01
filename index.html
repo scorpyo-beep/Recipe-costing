@@ -41,7 +41,7 @@
 <div id="recipeViewer" class="card hidden"></div><div id="recipeEditor" class="card hidden"></div>
 </section>
 <section id="invoice" class="page">
-<div class="card"><div class="h1">Invoice Scanner</div><div class="notice"><b>Scan once, add everything.</b><br>Take a clear photo of your invoice. YE$! CHEF will read the ingredient lines, quantity, unit, price and invoice date, then let you verify everything before adding the whole invoice to Ingredients & Inventory.</div><div class="field"><label>Invoice photo</label><input id="invoicePhoto" type="file" accept="image/*" capture="environment"></div><img id="invoicePreview" class="photo-preview hidden" alt="Invoice preview"><div class="grid2"><div class="field"><label>Supplier</label><input id="invSupplier" placeholder="Supplier name"></div><div class="field"><label>Invoice date</label><input id="invDate" type="date"></div></div><div class="row"><button class="btn" id="scanInvoiceBtn">📸 Scan Invoice</button><button class="btn secondary" id="clearInvoiceBtn">Clear</button></div><div id="ocrStatus" class="status" style="margin-top:10px"></div></div>
+<div class="card"><div class="h1">Invoice Scanner</div><div class="notice"><b>Scan once, add everything.</b><br>Use your camera for a paper invoice, or choose a digital invoice from your phone. YE$! CHEF can read photos, PDFs and Word <b>.docx</b> files, then turn the detected lines into editable ingredient records.</div><div class="grid2"><button class="btn" id="scanInvoiceBtn">📸 Scan with Camera</button><button class="btn secondary" id="chooseInvoiceBtn">📁 Choose Invoice File</button></div><input id="cameraInput" type="file" accept="image/*" capture="environment" class="hidden"><input id="invoiceFile" type="file" accept="image/*,.pdf,application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.doc,application/msword" class="hidden"><div id="invoiceFileName" class="status" style="margin-top:10px">No invoice selected.</div><img id="invoicePreview" class="photo-preview hidden" alt="Invoice preview"><div class="grid2"><div class="field"><label>Supplier</label><input id="invSupplier" placeholder="Supplier name"></div><div class="field"><label>Invoice date</label><input id="invDate" type="date"></div></div><div class="row"><button class="btn secondary" id="clearInvoiceBtn">Clear</button></div><div id="ocrStatus" class="status" style="margin-top:10px"></div></div>
 <div class="card hidden" id="invoiceResultsCard"><div class="row" style="justify-content:space-between"><div class="h2" style="margin:0">Detected Items</div><span class="pill" id="invoiceItemCount">0 items</span></div><div class="notice">Check the rows before saving. OCR can misread numbers on blurry or angled invoices. You can edit every detected item.</div><div id="invoiceResults"></div><button class="btn full" id="saveAllInvoiceBtn">💾 Add All to Ingredients & Inventory</button><div id="invoiceSaveStatus" class="status" style="margin-top:12px"></div></div>
 <div class="card"><details><summary style="font-size:19px;font-weight:800;cursor:pointer">Show raw OCR text</summary><div id="ocrText" class="receipt" style="margin-top:12px">No scan yet.</div></details></div>
 </section>
@@ -53,6 +53,8 @@
 <nav class="nav"><button id="navHome" class="active"><span class="ico">🏠</span>Home</button><button id="navIngredients"><span class="ico">🥕</span>Ingredients</button><button id="navRecipes"><span class="ico">📖</span>Recipes</button><button id="navInventory"><span class="ico">📋</span>Inventory</button><button id="navInvoice"><span class="ico">📸</span>Invoice</button><button id="navSettings"><span class="ico">⚙️</span>Settings</button></nav>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
 <script>
 'use strict';
 const DB_NAME='KitchenCostingDB',DB_VERSION=1,STORE='app',STATE_KEY='state',OLD_KEYS=['kitchen_costing_v1','kitchen_costing_v2'];
@@ -122,11 +124,14 @@ async function shareOrDownload(file,downloadName,statusId){const status=$(status
 function renderAll(){renderHome();if(currentPage==='ingredients')renderIngredients();if(currentPage==='inventory')renderInventory();if(currentPage==='recipes')renderRecipes();}
 function populateInvoiceUnits(){ $('invDate').value=new Date().toISOString().slice(0,10); }
 let invoiceRows=[];
+let invoiceBusy=false;
 function clearInvoice(){
   invoiceRows=[];
-  $('invoicePhoto').value='';
+  $('cameraInput').value='';
+  $('invoiceFile').value='';
   $('invoicePreview').src='';
   $('invoicePreview').classList.add('hidden');
+  $('invoiceFileName').textContent='No invoice selected.';
   $('ocrText').textContent='No scan yet.';
   $('ocrStatus').textContent='';
   $('invoiceResultsCard').classList.add('hidden');
@@ -136,7 +141,53 @@ function clearInvoice(){
   $('invSupplier').value='';
   $('invDate').value=new Date().toISOString().slice(0,10);
 }
-$('invoicePhoto').addEventListener('change',()=>{const f=$('invoicePhoto').files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$('invoicePreview').src=r.result;$('invoicePreview').classList.remove('hidden')};r.readAsDataURL(f);});
+function showInvoicePreview(file){
+  if(!file||!file.type.startsWith('image/'))return;
+  const r=new FileReader();r.onload=()=>{$('invoicePreview').src=r.result;$('invoicePreview').classList.remove('hidden')};r.readAsDataURL(file);
+}
+async function pdfToText(file){
+  if(!window.pdfjsLib)throw new Error('PDF reader library is not available.');
+  const buf=await file.arrayBuffer();
+  const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+  let text='';
+  for(let n=1;n<=pdf.numPages;n++){
+    const page=await pdf.getPage(n);const content=await page.getTextContent();
+    text+=content.items.map(x=>x.str||'').join(' ')+'\n';
+  }
+  return text.trim();
+}
+async function docxToText(file){
+  if(!window.mammoth)throw new Error('Word reader library is not available.');
+  const result=await mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()});
+  return (result.value||'').trim();
+}
+async function imageToText(file){
+  if(!window.Tesseract)throw new Error('OCR library is not available.');
+  const result=await Tesseract.recognize(file,'eng',{logger:m=>{if(m.status)$('ocrStatus').textContent='Reading image: '+m.status+' '+Math.round((m.progress||0)*100)+'%'}});
+  return result.data.text||'';
+}
+async function fileToInvoiceText(file){
+  const type=(file.type||'').toLowerCase(),name=(file.name||'').toLowerCase();
+  if(type.startsWith('image/')||/\.(jpg|jpeg|png|webp|heic|heif)$/i.test(name))return await imageToText(file);
+  if(type==='application/pdf'||name.endsWith('.pdf')){
+    $('ocrStatus').textContent='Reading PDF...';
+    const text=await pdfToText(file);
+    if(text&&text.length>20)return text;
+    $('ocrStatus').textContent='PDF has no readable text. Rendering pages for OCR...';
+    if(!window.pdfjsLib)throw new Error('PDF reader unavailable.');
+    const buf=await file.arrayBuffer(),pdf=await pdfjsLib.getDocument({data:buf}).promise;let out='';
+    for(let n=1;n<=pdf.numPages;n++){
+      const page=await pdf.getPage(n),vp=page.getViewport({scale:2});const canvas=document.createElement('canvas');canvas.width=vp.width;canvas.height=vp.height;const ctx=canvas.getContext('2d');
+      await page.render({canvasContext:ctx,viewport:vp}).promise;const result=await Tesseract.recognize(canvas,'eng',{logger:m=>{if(m.status)$('ocrStatus').textContent='OCR PDF page '+n+'/'+pdf.numPages+': '+m.status+' '+Math.round((m.progress||0)*100)+'%'}});out+='\n'+(result.data.text||'');
+    }
+    return out;
+  }
+  if(type.includes('wordprocessingml')||name.endsWith('.docx')){
+    $('ocrStatus').textContent='Reading Word document...';return await docxToText(file);
+  }
+  if(type==='application/msword'||name.endsWith('.doc'))throw new Error('Older .doc files are not directly readable in the browser. Please save the Word invoice as .docx or PDF, then choose it here.');
+  throw new Error('Unsupported invoice file. Use a photo, PDF, or Word .docx file.');
+}
 function parseInvoiceDate(text){
   const patterns=[/(\b20\d{2})[-\/.](\d{1,2})[-\/.](\d{1,2})\b/,/(\b\d{1,2})[-\/.](\d{1,2})[-\/.](20\d{2})\b/];
   for(const re of patterns){const m=text.match(re);if(!m)continue;let y,mo,d;if(m[1].length===4){y=+m[1];mo=+m[2];d=+m[3]}else{mo=+m[1];d=+m[2];y=+m[3]}if(mo>=1&&mo<=12&&d>=1&&d<=31)return `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
@@ -149,9 +200,8 @@ function parseInvoiceLines(text){
   const unitWords=['kg','g','lb','oz','l','ml','each','ea','unit','units','dozen','dz','case','cs','pack','pk','box','btl','bottle','can','bag'];
   for(const raw of lines){
     const price=parseMoney(raw);if(price==null)continue;
-    if(/\b(total|subtotal|tax|hst|gst|pst|balance|amount due|change|cash|visa|mastercard|debit|payment|invoice|phone|fax|date)\b/i.test(raw))continue;
-    let before=raw.replace(/(?:\$\s*)?\d{1,5}(?:[.,]\d{2})\s*$/,'').trim();
-    if(!before||before.length<2)continue;
+    if(/\b(total|subtotal|tax|hst|gst|pst|balance|amount due|change|cash|visa|mastercard|debit|payment|invoice|phone|fax|date|thank you)\b/i.test(raw))continue;
+    let before=raw.replace(/(?:\$\s*)?\d{1,5}(?:[.,]\d{2})\s*$/,'').trim();if(!before||before.length<2)continue;
     let qty=1,unit='each';
     const qm=before.match(/(?:^|\s)(\d+(?:[.,]\d+)?)\s*(kg|g|lb|oz|l|ml|each|ea|unit|units|dozen|dz|case|cs|pack|pk|box|btl|bottle|can|bag)?\s*$/i);
     if(qm){qty=Number(qm[1].replace(',','.'));const u=(qm[2]||'each').toLowerCase();unit=['ea','unit','units','case','cs','pack','pk','box','btl','bottle','can','bag'].includes(u)?'each':u==='dz'?'dozen':u==='l'?'L':u;before=before.slice(0,qm.index).trim();}
@@ -163,36 +213,34 @@ function parseInvoiceLines(text){
 }
 function renderInvoiceRows(){
   $('invoiceItemCount').textContent=`${invoiceRows.length} item${invoiceRows.length===1?'':'s'}`;
-  $('invoiceResults').innerHTML=invoiceRows.length?invoiceRows.map((r,i)=>`<div class="invoice-result" data-index="${i}"><div class="grid3"><div class="field name-field"><label>Ingredient</label><input class="ir-name" value="${esc(r.name)}"></div><div class="field"><label>Qty</label><input class="ir-qty" type="number" step="any" value="${esc(r.qty)}"></div><div class="field"><label>Unit</label><select class="ir-unit">${UNITS.map(u=>`<option ${u===r.unit?'selected':''}>${u}</option>`).join('')}</select></div><div class="field price-field"><label>Cost</label><input class="ir-price" type="number" step="0.01" value="${esc(r.price)}"></div></div><button class="btn small danger remove-invoice-row" type="button">Remove</button></div>`).join(''):'<div class="empty">No ingredient lines were confidently detected. Try a clearer photo or add the items manually.</div>';
+  $('invoiceResults').innerHTML=invoiceRows.length?invoiceRows.map((r,i)=>`<div class="invoice-result" data-index="${i}"><div class="grid3"><div class="field name-field"><label>Ingredient</label><input class="ir-name" value="${esc(r.name)}"></div><div class="field"><label>Qty</label><input class="ir-qty" type="number" step="any" value="${esc(r.qty)}"></div><div class="field"><label>Unit</label><select class="ir-unit">${UNITS.map(u=>`<option ${u===r.unit?'selected':''}>${u}</option>`).join('')}</select></div><div class="field price-field"><label>Cost</label><input class="ir-price" type="number" step="0.01" value="${esc(r.price)}"></div></div><button class="btn small danger remove-invoice-row" type="button">Remove</button></div>`).join(''):'<div class="empty">No ingredient lines were confidently detected. Try a clearer photo or a digital PDF/DOCX, or add the items manually.</div>';
   $('invoiceResults').querySelectorAll('.remove-invoice-row').forEach(b=>b.onclick=()=>{invoiceRows.splice(Number(b.closest('.invoice-result').dataset.index),1);renderInvoiceRows();});
 }
-$('scanInvoiceBtn').onclick=async()=>{
-  const f=$('invoicePhoto').files[0];if(!f){alert('Choose or take an invoice photo first.');return}
-  if(!window.Tesseract){$('ocrStatus').textContent='OCR library is not available.';return}
-  $('ocrStatus').textContent='Scanning invoice...';
+async function processInvoiceFile(f){
+  if(invoiceBusy||!f)return;invoiceBusy=true;$('invoiceFileName').textContent='Selected: '+f.name;$('invoiceResultsCard').classList.add('hidden');$('ocrStatus').textContent='Preparing invoice...';
+  showInvoicePreview(f);
   try{
-    const result=await Tesseract.recognize(f,'eng',{logger:m=>{if(m.status)$('ocrStatus').textContent=m.status+' '+Math.round((m.progress||0)*100)+'%'}});
-    const text=result.data.text||'';$('ocrText').textContent=text||'No text detected.';
+    const text=await fileToInvoiceText(f);$('ocrText').textContent=text||'No text detected.';
     const detectedDate=parseInvoiceDate(text);if(detectedDate)$('invDate').value=detectedDate;
-    invoiceRows=parseInvoiceLines(text);renderInvoiceRows();$('invoiceResultsCard').classList.remove('hidden');
-    $('ocrStatus').textContent=invoiceRows.length?`Scan complete — ${invoiceRows.length} possible ingredient line(s) found. Verify before saving.`:'Scan complete, but no ingredient lines were confidently detected.';
+    invoiceRows=parseInvoiceLines(text||'');renderInvoiceRows();$('invoiceResultsCard').classList.remove('hidden');
+    $('ocrStatus').textContent=invoiceRows.length?`Scan complete — ${invoiceRows.length} possible ingredient line(s) found. Verify before saving.`:'Scan complete, but no ingredient lines were confidently detected. The raw text is available below.';
     window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
-  }catch(e){$('ocrStatus').textContent='OCR failed: '+e.message;}
-};
+  }catch(e){$('ocrStatus').textContent='Invoice scan failed: '+e.message;}
+  finally{invoiceBusy=false;}
+}
+$('scanInvoiceBtn').onclick=()=>{if(!invoiceBusy)$('cameraInput').click();};
+$('chooseInvoiceBtn').onclick=()=>{if(!invoiceBusy)$('invoiceFile').click();};
+$('cameraInput').addEventListener('change',()=>{const f=$('cameraInput').files[0];if(f)processInvoiceFile(f);});
+$('invoiceFile').addEventListener('change',()=>{const f=$('invoiceFile').files[0];if(f)processInvoiceFile(f);});
 $('clearInvoiceBtn').onclick=clearInvoice;
 async function saveAllInvoiceItems(){
   const cards=[...document.querySelectorAll('#invoiceResults .invoice-result')];const supplier=$('invSupplier').value.trim();const date=$('invDate').value||new Date().toISOString().slice(0,10);let saved=0;
   for(const card of cards){const name=card.querySelector('.ir-name').value.trim();const qty=Number(card.querySelector('.ir-qty').value);const unit=card.querySelector('.ir-unit').value;const price=Number(card.querySelector('.ir-price').value);if(!name||!Number.isFinite(qty)||qty<=0||!Number.isFinite(price)||price<0)continue;
     const existing=state.ingredients.find(i=>i.name.trim().toLowerCase()===name.toLowerCase());
-    if(existing){
-      existing.supplier=supplier||existing.supplier||'';existing.qty=qty;existing.unit=unit;existing.price=price;existing.date=date;existing.updatedAt=Date.now();
-      const oldQ=Number(existing.inventoryQty)||0,oldU=existing.inventoryUnit||existing.unit;const add=convert(qty,unit,oldU);if(add!=null){existing.inventoryQty=oldQ+add;existing.inventoryUnit=oldU}else{existing.inventoryQty=qty;existing.inventoryUnit=unit;}
-      if(!existing.storage||!STORAGE_AREAS.includes(existing.storage))existing.storage='Pantry';existing.notes=existing.notes||'Updated from invoice';
-    }else{state.ingredients.push({id:uid(),name,storage:'Pantry',supplier,qty,unit,price,date,inventoryQty:qty,inventoryUnit:unit,notes:'Added from invoice',updatedAt:Date.now()});}
-    saved++;
+    if(existing){existing.supplier=supplier||existing.supplier||'';existing.qty=qty;existing.unit=unit;existing.price=price;existing.date=date;existing.updatedAt=Date.now();const oldQ=Number(existing.inventoryQty)||0,oldU=existing.inventoryUnit||existing.unit;const add=convert(qty,unit,oldU);if(add!=null){existing.inventoryQty=oldQ+add;existing.inventoryUnit=oldU}else{existing.inventoryQty=qty;existing.inventoryUnit=unit;}if(!existing.storage||!STORAGE_AREAS.includes(existing.storage))existing.storage='Pantry';existing.notes=existing.notes||'Updated from invoice';}
+    else{state.ingredients.push({id:uid(),name,storage:'Pantry',supplier,qty,unit,price,date,inventoryQty:qty,inventoryUnit:unit,notes:'Added from invoice',updatedAt:Date.now()});}saved++;
   }
-  if(!saved){$('invoiceSaveStatus').textContent='Nothing was saved. Check the detected rows.';return;}
-  if(await safeSave()){$('invoiceSaveStatus').textContent=`Saved ${saved} ingredient(s) and added the purchase quantities to Inventory.`;renderIngredients();renderInventory();}
+  if(!saved){$('invoiceSaveStatus').textContent='Nothing was saved. Check the detected rows.';return;}if(await safeSave()){$('invoiceSaveStatus').textContent=`Saved ${saved} ingredient(s) and added the purchase quantities to Inventory.`;renderIngredients();renderInventory();}
 }
 $('saveAllInvoiceBtn').onclick=saveAllInvoiceItems;
 function download(name,text,type='application/json'){const blob=new Blob([text],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
