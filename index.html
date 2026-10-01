@@ -51,7 +51,128 @@
 </section>
 </main>
 <nav class="nav"><button id="navHome" class="active"><span class="ico">🏠</span>Home</button><button id="navIngredients"><span class="ico">🥕</span>Ingredients</button><button id="navRecipes"><span class="ico">📖</span>Recipes</button><button id="navInventory"><span class="ico">📋</span>Inventory</button><button id="navInvoice"><span class="ico">📸</span>Invoice</button><button id="navSettings"><span class="ico">⚙️</span>Settings</button></nav>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js">
+/* YE$! CHEF recipe edit + portion-size update */
+
+function recipeCost(r){
+  let total=0, missing=0;
+  for(const line of (r.ingredients||[])){
+    const i=getIngredient(line.ingredientId);
+    const c=i?ingredientCostFor(i,Number(line.qty),line.unit):null;
+    if(c==null) missing++; else total+=c;
+  }
+  let portions=1;
+  if(r.portionQty && r.portionUnit && r.yieldQty && r.yieldUnit){
+    const converted=convert(Number(r.portionQty),r.portionUnit,r.yieldUnit);
+    if(converted && converted>0) portions=Number(r.yieldQty)/converted;
+    else if(unitBase(r.portionUnit)===unitBase(r.yieldUnit) && unitBase(r.portionUnit)) portions=Number(r.yieldQty)/Number(r.portionQty);
+  }else{
+    portions=Math.max(1,Number(r.yieldQty)||1);
+  }
+  if(!Number.isFinite(portions)||portions<=0) portions=1;
+  const per=total/portions;
+  let sell=0;
+  if(r.pricingMode==='food'){
+    const fc=Number(r.targetFoodCost); sell=fc>0?per/(fc/100):0;
+  }else sell=per*(1+Number(r.markup||0)/100);
+  return {total,portions,per,sell,foodCost:sell>0?(per/sell)*100:0,missing};
+}
+
+function updateLiveCost(){
+  if(!$('liveCost')) return;
+  const rows=readRecipeRows();
+  const total=rows.reduce((s,x)=>{
+    const i=getIngredient(x.ingredientId);
+    const c=i?ingredientCostFor(i,Number(x.qty),x.unit):null;
+    return s+(c||0);
+  },0);
+  const missing=rows.filter(x=>x.ingredientId&&costText(x)==='—').length;
+  const totalYield=Number($('recYield')?.value)||0;
+  const totalUnit=$('recYieldUnit')?.value.trim()||'';
+  const portionQty=Number($('recPortionQty')?.value)||0;
+  const portionUnit=$('recPortionUnit')?.value.trim()||'';
+  let portions=1, msg='';
+  if(totalYield>0&&portionQty>0&&totalUnit&&portionUnit){
+    const converted=convert(portionQty,portionUnit,totalUnit);
+    if(converted&&converted>0) portions=totalYield/converted;
+    else msg='Use compatible units for total yield and portion size, such as 5 L + 250 ml or 2 kg + 150 g.';
+  }
+  const per=total/Math.max(0.000001,portions);
+  const v=Number($('pricingValue')?.value)||0;
+  const sell=$('recPricing')?.value==='food'?(v>0?per/(v/100):0):per*(1+v/100);
+  $('liveCost').innerHTML=`
+    <div class="costline"><span>Total recipe cost</span><b>${money(total)}</b></div>
+    <div class="costline"><span>Calculated portions</span><b>${portions.toFixed(2).replace(/\.00$/,'')}</b></div>
+    <div class="costline"><span>Cost per portion</span><b>${money(per)}</b></div>
+    <div class="costline total"><span>Selling price per portion</span><b>${money(sell)}</b></div>
+    <div class="costline"><span>Food cost %</span><b>${sell>0?(per/sell*100).toFixed(1):'0.0'}%</b></div>
+    ${msg?`<div class="notice" style="margin-top:12px;margin-bottom:0">${msg}</div>`:''}
+    ${missing?`<div class="notice" style="margin-top:12px;margin-bottom:0">${missing} ingredient(s) cannot be costed because the recipe unit is not compatible with the purchase unit.</div>`:''}`;
+}
+
+function renderRecipeEditor(){
+  const r=editingRecipeId?getRecipe(editingRecipeId):null;
+  const data=r||{name:'',category:'Soups',description:'',photo:'',yieldQty:1,yieldUnit:'portion',portionQty:1,portionUnit:'portion',pricingMode:'markup',markup:100,targetFoodCost:30,instructions:'',ingredients:[]};
+  const portionQty=data.portionQty||1;
+  const portionUnit=data.portionUnit||'portion';
+  const box=$('recipeEditor'); box.classList.remove('hidden');
+  box.innerHTML=`
+    <div class="h1">${r?'Edit Recipe':'New Recipe'}</div>
+    <div class="grid2">
+      <div class="field"><label>Recipe name</label><input id="recName" value="${esc(data.name)}" placeholder="Honey Glazed Chicken"></div>
+      <div class="field"><label>Category</label><select id="recCategory">${CATEGORIES.map(c=>`<option ${data.category===c?'selected':''}>${c}</option>`).join('')}</select></div>
+    </div>
+    <div class="field"><label>Description</label><textarea id="recDescription" placeholder="Short description">${esc(data.description)}</textarea></div>
+    <div class="field"><label>Recipe photo</label><input id="recPhoto" type="file" accept="image/*"><div class="row">${data.photo?`<img id="existingPhoto" class="thumb" src="${data.photo}" alt="Recipe photo">`:''}<button type="button" class="btn small secondary ${data.photo?'':'hidden'}" id="removePhoto">Remove Photo</button></div></div>
+
+    <div class="h2" style="margin-top:20px">Yield & Portion Size</div>
+    <div class="notice">Enter the full amount this recipe makes, then enter the size of one serving. YE$! CHEF calculates the number of portions and the cost/selling price per portion automatically.</div>
+    <div class="grid2">
+      <div class="field"><label>Total recipe yield</label><input id="recYield" type="number" min="0" step="any" inputmode="decimal" value="${esc(data.yieldQty)}"></div>
+      <div class="field"><label>Total yield unit</label><input id="recYieldUnit" value="${esc(data.yieldUnit)}" placeholder="ml, L, g, kg, oz, lb"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Single portion size</label><input id="recPortionQty" type="number" min="0" step="any" inputmode="decimal" value="${esc(portionQty)}"></div>
+      <div class="field"><label>Portion unit</label><input id="recPortionUnit" value="${esc(portionUnit)}" placeholder="ml, L, g, kg, oz, lb"></div>
+    </div>
+
+    <div class="h2">Ingredients</div><div id="recipeIngredients"></div><button class="btn secondary full" id="addRecipeIngredient">＋ Add Ingredient</button>
+    <div class="h2" style="margin-top:25px">Pricing</div>
+    <div class="grid2"><div class="field"><label>Method</label><select id="recPricing"><option value="markup" ${data.pricingMode!=='food'?'selected':''}>Markup %</option><option value="food" ${data.pricingMode==='food'?'selected':''}>Target Food Cost %</option></select></div><div class="field"><label id="pricingLabel">Markup %</label><input id="pricingValue" type="number" step="0.1" inputmode="decimal" value="${esc(data.pricingMode==='food'?data.targetFoodCost:data.markup)}"></div></div>
+    <div id="liveCost" class="costbox"></div>
+    <div class="field" style="margin-top:16px"><label>Instructions</label><textarea id="recInstructions" placeholder="Preparation and cooking instructions">${esc(data.instructions)}</textarea></div>
+    <div class="row"><button class="btn" id="saveRecipe">💾 Save Recipe</button><button class="btn secondary" id="cancelRecipe">Cancel</button>${r?'<button class="btn danger" id="deleteRecipeFromEditor">🗑 Delete Recipe</button>':''}</div>`;
+
+  renderRecipeRows((data.ingredients&&data.ingredients.length)?data.ingredients:[{ingredientId:'',qty:'',unit:'g'}]);
+  $('addRecipeIngredient').onclick=()=>{const rows=readRecipeRows();rows.push({ingredientId:'',qty:'',unit:'g'});renderRecipeRows(rows)};
+  $('recPricing').onchange=updatePricingLabel;
+  ['recYield','recYieldUnit','recPortionQty','recPortionUnit'].forEach(id=>$(id).oninput=updateLiveCost);
+  $('pricingValue').oninput=updateLiveCost;
+  $('recPhoto').onchange=previewRecipePhoto;
+  $('removePhoto')?.addEventListener('click',()=>{editingRecipePhoto='';const im=$('existingPhoto');if(im)im.remove();$('removePhoto').classList.add('hidden');});
+  $('saveRecipe').onclick=saveRecipe;
+  $('cancelRecipe').onclick=()=>{editingRecipeId=null;editingRecipePhoto=null;$('recipeEditor').classList.add('hidden');$('recipeEditor').innerHTML='';renderRecipes();};
+  $('deleteRecipeFromEditor')?.addEventListener('click',async()=>{await deleteRecipe(editingRecipeId);editingRecipeId=null;$('recipeEditor').classList.add('hidden');$('recipeEditor').innerHTML='';renderRecipes();});
+  editingRecipePhoto=data.photo||''; updatePricingLabel(); updateLiveCost();
+}
+
+async function saveRecipe(){
+  const name=$('recName').value.trim();
+  if(!name){alert('Enter a recipe name.');return;}
+  const totalYield=Math.max(0,Number($('recYield').value)||0);
+  const totalUnit=$('recYieldUnit').value.trim()||'portion';
+  const portionQty=Math.max(0,Number($('recPortionQty').value)||0);
+  const portionUnit=$('recPortionUnit').value.trim()||'portion';
+  if(totalYield<=0||portionQty<=0){alert('Enter a total recipe yield and a single portion size.');return;}
+  if(unitBase(totalUnit)&&unitBase(portionUnit)&&unitBase(totalUnit)!==unitBase(portionUnit)){alert('Total yield and single portion size must use compatible units. For example 5 L + 250 ml, or 2 kg + 150 g.');return;}
+  const rows=readRecipeRows().filter(x=>x.ingredientId&&Number(x.qty)>0);
+  const pricing=$('recPricing').value,v=Number($('pricingValue').value)||0;
+  const r={id:editingRecipeId||uid(),name,category:$('recCategory').value,description:$('recDescription').value.trim(),photo:editingRecipePhoto||'',yieldQty:totalYield,yieldUnit:totalUnit,portionQty,portionUnit,pricingMode:pricing,markup:pricing==='markup'?v:0,targetFoodCost:pricing==='food'?v:0,instructions:$('recInstructions').value.trim(),ingredients:rows,createdAt:editingRecipeId?(getRecipe(editingRecipeId)?.createdAt||Date.now()):Date.now(),updatedAt:Date.now()};
+  const idx=state.recipes.findIndex(x=>x.id===r.id); if(idx>=0) state.recipes[idx]=r; else state.recipes.push(r);
+  if(await safeSave()){editingRecipeId=null;editingRecipePhoto='';$('recipeEditor').classList.add('hidden');$('recipeEditor').innerHTML='';renderRecipes();showPage('recipes');}
+}
+
+</script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
