@@ -84,7 +84,13 @@ body.stocktake-mode .inventory-row{border:2px solid #07558a;background:#f7fbff}b
     <div class="field"><label>Supplier email (optional)</label><input id="orderSupplierEmail" type="email" inputmode="email" placeholder="orders@supplier.com"></div>
   </div>
   <div class="email-note">Supplier email is saved on this device for the next order.</div>
+  <div class="grid2" style="margin-top:12px">
+    <button class="btn secondary" id="autoFillSupplierOrder" type="button">⚡ Auto-fill to par</button>
+    <button class="btn secondary" id="clearSupplierOrder" type="button">Clear quantities</button>
+  </div>
+  <p class="muted" style="font-size:13px">Auto-fill calculates the amount needed to reach each ingredient's par level, only when the stock and purchase units can be converted safely. Review every quantity before ordering.</p>
   <div id="supplierOrderList" class="supplier-order-card"></div>
+  <div class="costbox" id="supplierOrderEstimate"><div class="costline"><span>Estimated order subtotal</span><b id="supplierOrderEstimateValue">$0.00</b></div><div class="muted" style="font-size:12px">Estimate uses the latest saved package price and excludes tax, delivery, deposits and supplier price changes.</div></div>
   <div class="grid2" style="margin-top:12px">
     <button class="btn" id="emailSupplierOrder">✉️ Email Order</button>
     <button class="btn secondary" id="shareSupplierOrder">📄 Share / Word</button>
@@ -305,7 +311,36 @@ function renderSupplierOrder(){
   const items=state.ingredients.filter(i=>String(i.supplier||'').trim()===supplier);
   if(!items.length){box.innerHTML='<div class="empty">No ingredients are assigned to this supplier.</div>';return;}
   box.innerHTML=`<div class="row" style="justify-content:space-between"><b>${esc(supplier)} — Order</b><span class="pill">${items.length} item${items.length===1?'':'s'}</span></div>`+
-    items.map(i=>`<div class="order-row" data-order-id="${esc(i.id)}"><div class="field order-name"><label>Ingredient</label><div class="itemtitle" style="padding:13px 0">${esc(i.name)}</div><div class="muted">Purchase unit: ${esc(i.unit||'each')}</div></div><div class="field order-onhand"><label>On hand</label><div style="padding:13px 0;font-weight:800">${esc(i.inventoryQty??0)} ${esc(i.inventoryUnit||i.unit||'each')}</div></div><div class="field order-qty"><label>Order qty</label><input class="supplier-order-qty" type="number" min="0" step="any" inputmode="decimal" value="${esc(i._orderQty??0)}" data-id="${esc(i.id)}"></div><div class="field"><label>Unit</label><div style="padding:13px 0;font-weight:800">${esc(i.unit||'each')}</div></div></div>`).join('');
+    items.map(i=>`<div class="order-row" data-order-id="${esc(i.id)}"><div class="field order-name"><label>Ingredient</label><div class="itemtitle" style="padding:13px 0">${esc(i.name)}</div><div class="muted">Purchase unit: ${esc(i.unit||'each')} · Par: ${esc(i.parLevel??0)} ${esc(i.inventoryUnit||i.unit||'each')}</div></div><div class="field order-onhand"><label>On hand</label><div style="padding:13px 0;font-weight:800">${esc(i.inventoryQty??0)} ${esc(i.inventoryUnit||i.unit||'each')}</div></div><div class="field order-qty"><label>Order qty</label><input class="supplier-order-qty" type="number" min="0" step="any" inputmode="decimal" value="${esc(i._orderQty??0)}" data-id="${esc(i.id)}"></div><div class="field"><label>Unit</label><div style="padding:13px 0;font-weight:800">${esc(i.unit||'each')}</div></div></div>`).join('');
+  updateSupplierOrderEstimate();
+}
+function autoFillSupplierOrderToPar(){
+  const supplier=$('orderSupplier')?.value||'';
+  if(!supplier){$('supplierOrderStatus').textContent='Choose a supplier first.';return;}
+  let filled=0, skipped=0;
+  state.ingredients.filter(i=>String(i.supplier||'').trim()===supplier).forEach(i=>{
+    const par=Number(i.parLevel)||0;
+    if(par<=0){i._orderQty=0;return;}
+    const invUnit=i.inventoryUnit||i.unit||'each', purchaseUnit=i.unit||'each';
+    const target=convert(par,invUnit,purchaseUnit), onHand=convert(Number(i.inventoryQty)||0,invUnit,purchaseUnit);
+    if(target==null||onHand==null){i._orderQty=0;skipped++;return;}
+    const needed=Math.max(0,target-onHand);
+    i._orderQty=needed>0?Number(needed.toFixed(3)):0;
+    if(needed>0)filled++;
+  });
+  renderSupplierOrder();
+  $('supplierOrderStatus').textContent=`Auto-filled ${filled} below-par item(s). ${skipped?skipped+' item(s) skipped because units could not be converted safely.':''} Review quantities before sending.`;
+}
+function clearSupplierOrderQuantities(){
+  state.ingredients.forEach(i=>{if(String(i.supplier||'').trim()===($('orderSupplier')?.value||''))i._orderQty=0;});
+  renderSupplierOrder();$('supplierOrderStatus').textContent='Order quantities cleared. Inventory and par levels were not changed.';
+}
+function updateSupplierOrderEstimate(){
+  const supplier=$('orderSupplier')?.value||'';
+  const rows=state.ingredients.filter(i=>String(i.supplier||'').trim()===supplier&&Number(i._orderQty)>0);
+  let total=0, missing=0;
+  rows.forEach(i=>{const packQty=Number(i.qty)||0,price=Number(i.price);if(packQty>0&&Number.isFinite(price)&&price>=0)total+=Number(i._orderQty)*price/packQty;else missing++;});
+  const out=$('supplierOrderEstimateValue');if(out)out.textContent=money(total)+(missing?' + '+missing+' price estimate(s) unavailable':'');
 }
 function syncSupplierOrderQty(){
   document.querySelectorAll('.supplier-order-qty').forEach(el=>{
@@ -316,7 +351,7 @@ function selectedSupplierOrderRows(){
   syncSupplierOrderQty();
   const supplier=$('orderSupplier')?.value||'';
   return state.ingredients.filter(i=>String(i.supplier||'').trim()===supplier&&Number(i._orderQty)>0)
-    .map(i=>({name:i.name,qty:Number(i._orderQty),unit:i.unit||'each',onHand:Number(i.inventoryQty)||0,inventoryUnit:i.inventoryUnit||i.unit||'each'}));
+    .map(i=>({name:i.name,qty:Number(i._orderQty),unit:i.unit||'each',onHand:Number(i.inventoryQty)||0,inventoryUnit:i.inventoryUnit||i.unit||'each',price:Number(i.price)||0,packQty:Number(i.qty)||0,estimatedCost:(Number(i.qty)>0?Number(i._orderQty)*(Number(i.price)||0)/Number(i.qty):null)}));
 }
 function supplierOrderText(){
   const supplier=$('orderSupplier')?.value||'';
@@ -330,7 +365,7 @@ function supplierOrderText(){
 function supplierOrderHTML(){
   const supplier=$('orderSupplier')?.value||'';
   const rows=selectedSupplierOrderRows();
-  return `<h1 style="font-family:Arial;margin:0 0 8px">YE$! CHEF PRO — Purchase Order</h1><p style="font-family:Arial"><b>Supplier:</b> ${esc(supplier)}<br><b>Date:</b> ${new Date().toLocaleDateString()}</p><table style="border-collapse:collapse;width:100%;font-family:Arial;font-size:11pt"><thead><tr><th style="border:1px solid #999;padding:7px;text-align:left">Ingredient</th><th style="border:1px solid #999;padding:7px;text-align:left">Order Qty</th><th style="border:1px solid #999;padding:7px;text-align:left">Unit</th><th style="border:1px solid #999;padding:7px;text-align:left">On Hand</th></tr></thead><tbody>${rows.map(r=>`<tr><td style="border:1px solid #bbb;padding:7px">${esc(r.name)}</td><td style="border:1px solid #bbb;padding:7px">${esc(r.qty)}</td><td style="border:1px solid #bbb;padding:7px">${esc(r.unit)}</td><td style="border:1px solid #bbb;padding:7px">${esc(r.onHand)} ${esc(r.inventoryUnit)}</td></tr>`).join('')}</tbody></table><p style="font-family:Arial;margin-top:18px">Please confirm availability and delivery date.</p>`;
+  return `<h1 style="font-family:Arial;margin:0 0 8px">YE$! CHEF PRO — Purchase Order</h1><p style="font-family:Arial"><b>Supplier:</b> ${esc(supplier)}<br><b>Date:</b> ${new Date().toLocaleDateString()}</p><table style="border-collapse:collapse;width:100%;font-family:Arial;font-size:11pt"><thead><tr><th style="border:1px solid #999;padding:7px;text-align:left">Ingredient</th><th style="border:1px solid #999;padding:7px;text-align:left">Order Qty</th><th style="border:1px solid #999;padding:7px;text-align:left">Unit</th><th style="border:1px solid #999;padding:7px;text-align:left">On Hand</th><th style="border:1px solid #999;padding:7px;text-align:left">Est. Cost</th></tr></thead><tbody>${rows.map(r=>`<tr><td style="border:1px solid #bbb;padding:7px">${esc(r.name)}</td><td style="border:1px solid #bbb;padding:7px">${esc(r.qty)}</td><td style="border:1px solid #bbb;padding:7px">${esc(r.unit)}</td><td style="border:1px solid #bbb;padding:7px">${esc(r.onHand)} ${esc(r.inventoryUnit)}</td><td style="border:1px solid #bbb;padding:7px">${r.estimatedCost==null?'—':money(r.estimatedCost)}</td></tr>`).join('')}</tbody></table><p style="font-family:Arial;margin-top:18px">Please confirm availability and delivery date.</p>`;
 }
 function makeSupplierOrderWord(){
   const supplier=$('orderSupplier')?.value||'supplier';
@@ -914,7 +949,9 @@ $('homeInvoice').onclick=()=>showPage('invoice');
 $('navHome').onclick=()=>showPage('home');$('navIngredients').onclick=()=>showPage('ingredients');$('navRecipes').onclick=()=>showPage('recipes');$('navInventory').onclick=()=>showPage('inventory');$('navInvoice').onclick=()=>showPage('invoice');$('navSettings').onclick=()=>showPage('settings');
 $('orderSupplier')?.addEventListener('change',()=>{populateOrderSuppliers();});
 $('orderSupplierEmail')?.addEventListener('change',async()=>{const s=$('orderSupplier')?.value||'',e=$('orderSupplierEmail').value.trim();if(s){if(!state.supplierEmails)state.supplierEmails={};state.supplierEmails[s]=e;await saveState();}});
-$('supplierOrderList')?.addEventListener('input',e=>{if(e.target.matches('.supplier-order-qty')){const i=getIngredient(e.target.dataset.id);if(i)i._orderQty=Math.max(0,Number(e.target.value)||0);}});
+$('supplierOrderList')?.addEventListener('input',e=>{if(e.target.matches('.supplier-order-qty')){const i=getIngredient(e.target.dataset.id);if(i)i._orderQty=Math.max(0,Number(e.target.value)||0);updateSupplierOrderEstimate();}});
+$('autoFillSupplierOrder')?.addEventListener('click',autoFillSupplierOrderToPar);
+$('clearSupplierOrder')?.addEventListener('click',clearSupplierOrderQuantities);
 $('emailSupplierOrder')?.addEventListener('click',emailSupplierOrder);
 $('shareSupplierOrder')?.addEventListener('click',async()=>{try{const supplier=$('orderSupplier')?.value||'supplier',rows=selectedSupplierOrderRows();if(!rows.length){$('supplierOrderStatus').textContent='Enter an order quantity for at least one ingredient.';return;}const blob=makeSupplierOrderWord();await shareOrDownload(new File([blob],`yes-chef-order-${supplier.replace(/[^a-z0-9]+/gi,'-').toLowerCase()}.doc`,{type:'application/msword'}),`yes-chef-order-${supplier.replace(/[^a-z0-9]+/gi,'-').toLowerCase()}.doc`,'supplierOrderStatus');}catch(e){$('supplierOrderStatus').textContent='Order sheet failed: '+e.message;}});
 $('saveInventoryBtn').onclick=saveInventory;
